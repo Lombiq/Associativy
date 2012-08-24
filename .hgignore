@@ -13,4 +13,4 @@ artifacts
 src/Orchard.Web/App_Data
 src/Orchard.Web/Media/
 syntax: regexp
-src/.*bin/.*
+(?i)src/.*bin/.*
