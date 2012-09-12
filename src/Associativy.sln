@@ -148,8 +148,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.ContentPermissions"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpgradeTo15", "Orchard.Web\Modules\UpgradeTo15\UpgradeTo15.csproj", "{8A9FDB57-342D-49C2-BAFC-D885AAE5CC7C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Associativy.Tests", "Orchard.Tests.Modules\Associativy.Tests\Associativy.Tests.csproj", "{55719AD1-3481-41F1-8B27-469578C58881}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Associativy Modules", "Associativy Modules", "{65D8AD91-DBDF-4DD7-86A6-E827115B6AD9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Associativy", "Orchard.Web\Modules\Associativy\Associativy.csproj", "{A8EE4964-4880-4EE1-AC0A-75492D89BBE8}"
@@ -165,6 +163,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Associativy.WebServices", "Orchard.Web\Modules\Associativy.WebServices\Associativy.WebServices.csproj", "{9842B890-267A-4B91-9B10-79A3CD984156}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Piedone.HelpfulLibraries", "Orchard.Web\Modules\Piedone.HelpfulLibraries\Piedone.HelpfulLibraries.csproj", "{EA61AD10-39D6-41A9-B12B-227F50C54158}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Associativy.Tests", "Orchard.Web\Modules\Associativy\Associativy.Tests\Associativy.Tests.csproj", "{55719AD1-3481-41F1-8B27-469578C58881}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -823,16 +823,6 @@ Global
 		{8A9FDB57-342D-49C2-BAFC-D885AAE5CC7C}.FxCop|Any CPU.Build.0 = Release|Any CPU
 		{8A9FDB57-342D-49C2-BAFC-D885AAE5CC7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8A9FDB57-342D-49C2-BAFC-D885AAE5CC7C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{55719AD1-3481-41F1-8B27-469578C58881}.CodeCoverage|Any CPU.ActiveCfg = Release|Any CPU
-		{55719AD1-3481-41F1-8B27-469578C58881}.CodeCoverage|Any CPU.Build.0 = Release|Any CPU
-		{55719AD1-3481-41F1-8B27-469578C58881}.Coverage|Any CPU.ActiveCfg = Release|Any CPU
-		{55719AD1-3481-41F1-8B27-469578C58881}.Coverage|Any CPU.Build.0 = Release|Any CPU
-		{55719AD1-3481-41F1-8B27-469578C58881}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{55719AD1-3481-41F1-8B27-469578C58881}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{55719AD1-3481-41F1-8B27-469578C58881}.FxCop|Any CPU.ActiveCfg = Release|Any CPU
-		{55719AD1-3481-41F1-8B27-469578C58881}.FxCop|Any CPU.Build.0 = Release|Any CPU
-		{55719AD1-3481-41F1-8B27-469578C58881}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{55719AD1-3481-41F1-8B27-469578C58881}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A8EE4964-4880-4EE1-AC0A-75492D89BBE8}.CodeCoverage|Any CPU.ActiveCfg = Release|Any CPU
 		{A8EE4964-4880-4EE1-AC0A-75492D89BBE8}.CodeCoverage|Any CPU.Build.0 = Release|Any CPU
 		{A8EE4964-4880-4EE1-AC0A-75492D89BBE8}.Coverage|Any CPU.ActiveCfg = Release|Any CPU
@@ -903,6 +893,16 @@ Global
 		{EA61AD10-39D6-41A9-B12B-227F50C54158}.FxCop|Any CPU.Build.0 = Release|Any CPU
 		{EA61AD10-39D6-41A9-B12B-227F50C54158}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EA61AD10-39D6-41A9-B12B-227F50C54158}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55719AD1-3481-41F1-8B27-469578C58881}.CodeCoverage|Any CPU.ActiveCfg = Release|Any CPU
+		{55719AD1-3481-41F1-8B27-469578C58881}.CodeCoverage|Any CPU.Build.0 = Release|Any CPU
+		{55719AD1-3481-41F1-8B27-469578C58881}.Coverage|Any CPU.ActiveCfg = Release|Any CPU
+		{55719AD1-3481-41F1-8B27-469578C58881}.Coverage|Any CPU.Build.0 = Release|Any CPU
+		{55719AD1-3481-41F1-8B27-469578C58881}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55719AD1-3481-41F1-8B27-469578C58881}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55719AD1-3481-41F1-8B27-469578C58881}.FxCop|Any CPU.ActiveCfg = Release|Any CPU
+		{55719AD1-3481-41F1-8B27-469578C58881}.FxCop|Any CPU.Build.0 = Release|Any CPU
+		{55719AD1-3481-41F1-8B27-469578C58881}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55719AD1-3481-41F1-8B27-469578C58881}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
