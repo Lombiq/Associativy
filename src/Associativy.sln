@@ -166,6 +166,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Piedone.HelpfulLibraries", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Associativy.Tests", "Orchard.Web\Modules\Associativy\Associativy.Tests\Associativy.Tests.csproj", "{55719AD1-3481-41F1-8B27-469578C58881}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Associativy.Neo4j", "Orchard.Web\Modules\Associativy.Neo4j\Associativy.Neo4j.csproj", "{6E96E80E-8CE0-4970-8DB4-6B3DC85E38AD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CodeCoverage|Any CPU = CodeCoverage|Any CPU
@@ -903,6 +905,16 @@ Global
 		{55719AD1-3481-41F1-8B27-469578C58881}.FxCop|Any CPU.Build.0 = Release|Any CPU
 		{55719AD1-3481-41F1-8B27-469578C58881}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{55719AD1-3481-41F1-8B27-469578C58881}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E96E80E-8CE0-4970-8DB4-6B3DC85E38AD}.CodeCoverage|Any CPU.ActiveCfg = Release|Any CPU
+		{6E96E80E-8CE0-4970-8DB4-6B3DC85E38AD}.CodeCoverage|Any CPU.Build.0 = Release|Any CPU
+		{6E96E80E-8CE0-4970-8DB4-6B3DC85E38AD}.Coverage|Any CPU.ActiveCfg = Release|Any CPU
+		{6E96E80E-8CE0-4970-8DB4-6B3DC85E38AD}.Coverage|Any CPU.Build.0 = Release|Any CPU
+		{6E96E80E-8CE0-4970-8DB4-6B3DC85E38AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E96E80E-8CE0-4970-8DB4-6B3DC85E38AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E96E80E-8CE0-4970-8DB4-6B3DC85E38AD}.FxCop|Any CPU.ActiveCfg = Release|Any CPU
+		{6E96E80E-8CE0-4970-8DB4-6B3DC85E38AD}.FxCop|Any CPU.Build.0 = Release|Any CPU
+		{6E96E80E-8CE0-4970-8DB4-6B3DC85E38AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E96E80E-8CE0-4970-8DB4-6B3DC85E38AD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -978,5 +990,6 @@ Global
 		{3049BDF1-8C72-4DD2-A693-4F17890FCBCA} = {65D8AD91-DBDF-4DD7-86A6-E827115B6AD9}
 		{9842B890-267A-4B91-9B10-79A3CD984156} = {65D8AD91-DBDF-4DD7-86A6-E827115B6AD9}
 		{EA61AD10-39D6-41A9-B12B-227F50C54158} = {65D8AD91-DBDF-4DD7-86A6-E827115B6AD9}
+		{6E96E80E-8CE0-4970-8DB4-6B3DC85E38AD} = {65D8AD91-DBDF-4DD7-86A6-E827115B6AD9}
 	EndGlobalSection
 EndGlobal
