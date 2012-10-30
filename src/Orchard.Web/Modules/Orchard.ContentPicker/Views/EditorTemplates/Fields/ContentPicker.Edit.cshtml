@@ -12,7 +12,7 @@
 
 <fieldset>
     <label @if(settings.Required) { <text>class="required"</text> }>@Model.Field.DisplayName</label>
-    <div id="save-message-@Html.FieldIdFor(m => m.Field.Ids)" class="message message-Warning content-picker-message">@T("Your need to save your changes.")</div>
+    <div id="save-message-@Html.FieldIdFor(m => m.Field.Ids)" class="message message-Warning content-picker-message">@T("You need to save your changes.")</div>
     <table id="content-picker-@Html.FieldIdFor(m => m.Field.Ids)" class="items content-picker" summary="@Model.Field.DisplayName">
         <colgroup>
             <col id="Col1" style="width:20px" />
@@ -86,7 +86,8 @@
 
                     refreshIds();
                     $('#save-message-@Html.FieldIdFor(m => m.Field.Ids)').show();
-                }
+                },
+                baseUrl: '@Url.Content("~/")'
             });
         });
 

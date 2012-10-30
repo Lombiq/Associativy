@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Orchard.Alias;
 using Orchard.Autoroute.Models;
+using Orchard.Autoroute.Settings;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Localization;
-using Orchard.Tokens;
-using Orchard.Autoroute.Settings;
-using Orchard.ContentManagement.MetaData;
 using Orchard.Logging;
-using Orchard.ContentManagement;
+using Orchard.Tokens;
 
 namespace Orchard.Autoroute.Services {
     public class AutorouteService : IAutorouteService {
@@ -166,7 +166,7 @@ namespace Orchard.Autoroute.Services {
         }
 
         public bool IsPathValid(string slug) {
-            return String.IsNullOrWhiteSpace(slug) || Regex.IsMatch(slug, @"^[^:?#\[\]@!$&'()*+,;=\s\""\<\>\\]+$") && !(slug.StartsWith(".") || slug.EndsWith("."));
+            return String.IsNullOrWhiteSpace(slug) || Regex.IsMatch(slug, @"^[^:?#\[\]@!$&'()*+,;=\s\""\<\>\\\|]+$") && !(slug.StartsWith(".") || slug.EndsWith("."));
         }
 
         public bool ProcessPath(AutoroutePart part) {

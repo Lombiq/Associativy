@@ -45,17 +45,18 @@ namespace Orchard.ContentPicker.Controllers {
                                             ? contentTypeDefinition.DisplayName
                                             : contentTypeDefinition.Name;
                 query = query.ForType(model.Options.SelectedFilter);
+
             }
             
             switch (model.Options.OrderBy) {
                 case ContentsOrder.Modified:
-                    query = query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.ModifiedUtc);
+                    query = query.OrderByDescending<CommonPartRecord>(cr => cr.ModifiedUtc);
                     break;
                 case ContentsOrder.Published:
-                    query = query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.PublishedUtc);
+                    query = query.OrderByDescending<CommonPartRecord>(cr => cr.PublishedUtc);
                     break;
                 case ContentsOrder.Created:
-                    query = query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.CreatedUtc);
+                    query = query.OrderByDescending<CommonPartRecord>(cr => cr.CreatedUtc);
                     break;
             }
 
@@ -78,6 +79,10 @@ namespace Orchard.ContentPicker.Controllers {
                 .Pager(pagerShape)
                 .Options(model.Options)
                 .TypeDisplayName(model.TypeDisplayName ?? "");
+
+            // retain the parameter in the pager links
+            RouteData.Values["Options.SelectedFilter"] = model.Options.SelectedFilter;
+            RouteData.Values["Options.OrderBy"] = model.Options.OrderBy.ToString();
 
             return new ShapeResult(this, Services.New.ContentPicker().Tab(tab));
         }
