@@ -172,6 +172,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpgradeTo16", "Orchard.Web\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SysCache", "Orchard.Web\Modules\SysCache\SysCache.csproj", "{3BD22132-D538-48C6-8854-F71333C798EB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Associativy.Extensions", "Orchard.Web\Modules\Associativy.Extensions\Associativy.Extensions.csproj", "{3640E6B0-EC67-4E40-9D9C-FFAD51BD2E14}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CodeCoverage|Any CPU = CodeCoverage|Any CPU
@@ -939,6 +941,16 @@ Global
 		{3BD22132-D538-48C6-8854-F71333C798EB}.FxCop|Any CPU.Build.0 = Release|Any CPU
 		{3BD22132-D538-48C6-8854-F71333C798EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3BD22132-D538-48C6-8854-F71333C798EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3640E6B0-EC67-4E40-9D9C-FFAD51BD2E14}.CodeCoverage|Any CPU.ActiveCfg = Release|Any CPU
+		{3640E6B0-EC67-4E40-9D9C-FFAD51BD2E14}.CodeCoverage|Any CPU.Build.0 = Release|Any CPU
+		{3640E6B0-EC67-4E40-9D9C-FFAD51BD2E14}.Coverage|Any CPU.ActiveCfg = Release|Any CPU
+		{3640E6B0-EC67-4E40-9D9C-FFAD51BD2E14}.Coverage|Any CPU.Build.0 = Release|Any CPU
+		{3640E6B0-EC67-4E40-9D9C-FFAD51BD2E14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3640E6B0-EC67-4E40-9D9C-FFAD51BD2E14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3640E6B0-EC67-4E40-9D9C-FFAD51BD2E14}.FxCop|Any CPU.ActiveCfg = Release|Any CPU
+		{3640E6B0-EC67-4E40-9D9C-FFAD51BD2E14}.FxCop|Any CPU.Build.0 = Release|Any CPU
+		{3640E6B0-EC67-4E40-9D9C-FFAD51BD2E14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3640E6B0-EC67-4E40-9D9C-FFAD51BD2E14}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1017,5 +1029,6 @@ Global
 		{9842B890-267A-4B91-9B10-79A3CD984156} = {65D8AD91-DBDF-4DD7-86A6-E827115B6AD9}
 		{EA61AD10-39D6-41A9-B12B-227F50C54158} = {65D8AD91-DBDF-4DD7-86A6-E827115B6AD9}
 		{6E96E80E-8CE0-4970-8DB4-6B3DC85E38AD} = {65D8AD91-DBDF-4DD7-86A6-E827115B6AD9}
+		{3640E6B0-EC67-4E40-9D9C-FFAD51BD2E14} = {65D8AD91-DBDF-4DD7-86A6-E827115B6AD9}
 	EndGlobalSection
 EndGlobal
