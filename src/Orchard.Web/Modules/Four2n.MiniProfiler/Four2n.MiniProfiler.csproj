@@ -47,23 +47,23 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autofac">
-      <HintPath>E:\Projects\Saját\Associativy\Associativy Development\lib\autofac\Autofac.dll</HintPath>
+      <HintPath>..\..\..\..\lib\autofac\Autofac.dll</HintPath>
     </Reference>
     <Reference Include="ClaySharp">
-      <HintPath>E:\Projects\Saját\Associativy\Associativy Development\lib\claysharp\ClaySharp.dll</HintPath>
+      <HintPath>..\..\..\..\lib\claysharp\ClaySharp.dll</HintPath>
     </Reference>
     <Reference Include="FluentNHibernate">
-      <HintPath>E:\Projects\Saját\Associativy\Associativy Development\lib\nhibernate\FluentNHibernate.dll</HintPath>
+      <HintPath>..\..\..\..\lib\nhibernate\FluentNHibernate.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="MiniProfiler">
-      <HintPath>E:\Projects\Saját\Associativy\Associativy Development\src\Orchard.Web\Modules\Four2n.MiniProfiler\Libs\MiniProfiler.dll</HintPath>
+      <HintPath>..\..\..\..\src\Orchard.Web\Modules\Four2n.MiniProfiler\Libs\MiniProfiler.dll</HintPath>
     </Reference>
     <Reference Include="NHibernate">
-      <HintPath>E:\Projects\Saját\Associativy\Associativy Development\lib\nhibernate\NHibernate.dll</HintPath>
+      <HintPath>..\..\..\..\lib\nhibernate\NHibernate.dll</HintPath>
     </Reference>
     <Reference Include="PoorMansTSqlFormatterLib35">
-      <HintPath>E:\Projects\Saját\Associativy\Associativy Development\src\Orchard.Web\Modules\Four2n.MiniProfiler\Libs\PoorMansTSqlFormatterLib35.dll</HintPath>
+      <HintPath>..\..\..\..\src\Orchard.Web\Modules\Four2n.MiniProfiler\Libs\PoorMansTSqlFormatterLib35.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
