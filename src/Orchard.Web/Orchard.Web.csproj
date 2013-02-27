@@ -134,16 +134,17 @@
     <Content Include="Config\Sample.HostComponents.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Media\web.config" />
+    <None Include="Media\web.config" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
     <Content Include="Media\OrchardLogo.png" />
     <Content Include="Refresh.html" />
-    <None Include="Web.config">
+    <None Include="Properties\PublishProfiles\Web Deploy Package.pubxml" />
+    <Content Include="Web.config">
       <SubType>Designer</SubType>
-    </None>
+    </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
