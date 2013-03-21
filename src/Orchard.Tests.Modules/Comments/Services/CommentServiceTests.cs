@@ -21,8 +21,12 @@ using Orchard.DisplayManagement.Implementation;
 using Orchard.Environment;
 using Orchard.Environment.Extensions;
 using Orchard.Security;
+using Orchard.Security.Providers;
+using Orchard.Services;
+using Orchard.Tests.Modules.Users;
 using Orchard.Tests.Stubs;
 using Orchard.UI.Notify;
+using Orchard.UI.PageClass;
 
 namespace Orchard.Tests.Modules.Comments.Services {
     [TestFixture]
@@ -32,7 +36,6 @@ namespace Orchard.Tests.Modules.Comments.Services {
 
         public override void Register(ContainerBuilder builder) {
             builder.RegisterType<CommentService>().As<ICommentService>();
-            builder.RegisterType<StubCommentValidator>().As<ICommentValidator>();
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterInstance(new Mock<IContentDefinitionManager>().Object);
@@ -50,6 +53,11 @@ namespace Orchard.Tests.Modules.Comments.Services {
             builder.RegisterType<CommentPartHandler>().As<IContentHandler>();
             builder.RegisterType<CommonPartHandler>().As<IContentHandler>();
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
+            builder.RegisterType<DefaultEncryptionService>().As<IEncryptionService>();
+            builder.RegisterInstance(ShellSettingsUtility.CreateEncryptionEnabled());
+
+            builder.RegisterType<StubClock>().As<IClock>();
+            builder.RegisterInstance(new Mock<IPageClassBuilder>().Object); 
             builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
         }
@@ -91,7 +99,6 @@ namespace Orchard.Tests.Modules.Comments.Services {
 
             }
 
-            _contentManager.Flush();
             Assert.That(_commentService.GetComments().Count(), Is.EqualTo(12));
         }
 
@@ -103,20 +110,6 @@ namespace Orchard.Tests.Modules.Comments.Services {
             int commentId = commentedItem.As<CommentPart>().Id;
 
             Assert.That(_commentService.GetCommentedContent(commentId), Is.Not.Null);
-        }
-
-        [Test]
-        public void UpdateShouldChangeComment() {
-            var commentedItem = _contentManager.New("commentedItem");
-            _contentManager.Create(commentedItem);
-            _contentManager.Create(commentedItem, VersionOptions.Published);
-            int commentId = commentedItem.As<CommentPart>().Id;
-
-            Assert.That(_commentService.GetComment(commentId).Record.Author, Is.Null.Or.Empty);
-
-            _commentService.UpdateComment(commentId, "test", "", "", "new text", CommentStatus.Pending);
-
-            Assert.That(_commentService.GetComment(commentId).Record.Author, Is.EqualTo("test"));
         }
 
         [Test]
@@ -156,21 +149,6 @@ namespace Orchard.Tests.Modules.Comments.Services {
         }
 
         [Test]
-        public void MarkAsSpamShouldFlagComments() {
-            var commentedItem = _contentManager.New("commentedItem");
-            _contentManager.Create(commentedItem);
-            _contentManager.Create(commentedItem, VersionOptions.Published);
-            int commentId = commentedItem.As<CommentPart>().Id;
-            _commentService.ApproveComment(commentId);
-
-            Assert.That(_commentService.GetComment(commentId).Record.Status, Is.EqualTo(CommentStatus.Approved));
-
-            _commentService.MarkCommentAsSpam(commentId);
-
-            Assert.That(_commentService.GetComment(commentId).Record.Status, Is.EqualTo(CommentStatus.Spam));
-        }
-
-        [Test]
         public void DeleteShouldRemoveComments() {
             var commentIds = new int[12];
 
@@ -181,14 +159,12 @@ namespace Orchard.Tests.Modules.Comments.Services {
                 commentIds[i] = commentedItem.As<CommentPart>().Id;
             }
 
-            _contentManager.Flush();
             Assert.That(_commentService.GetComments().Count(), Is.EqualTo(12));
 
             for (int i = 0; i < 12; i++) {
                 _commentService.DeleteComment(commentIds[i]);
             }
 
-            _contentManager.Flush();
             Assert.That(_commentService.GetComments().Count(), Is.EqualTo(0));
         }
     }
@@ -207,11 +183,5 @@ namespace Orchard.Tests.Modules.Comments.Services {
 
     public class CommentedItemDriver : ContentPartDriver<CommentedItem> {
         public static readonly string ContentTypeName = "commentedItem";
-    }
-
-    public class StubCommentValidator : ICommentValidator {
-        public bool ValidateComment(CommentPart commentPart) {
-            return true;
-        }
     }
 }

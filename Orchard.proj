@@ -104,7 +104,7 @@
   <!-- Building -->
 
   <Target Name="Clean">
-    <MSBuild Projects="$(SrcFolder)\Associativy.sln" Targets="Clean" />
+    <MSBuild Projects="$(SrcFolder)\Orchard.sln" Targets="Clean" />
     <RemoveDir Directories="$(BuildFolder)" ContinueOnError="true"/>
     <RemoveDir Directories="$(ArtifactsFolder)" />
   </Target>
@@ -112,12 +112,12 @@
   <Target Name ="Compile">
     <!-- Compile to "OutputFolder" -->
     <MSBuild
-      Projects="$(SrcFolder)\Associativy.sln"
+      Projects="$(SrcFolder)\Orchard.sln"
       Targets="Build"
       Properties="Configuration=Release;OutputPath=$(CompileFolder)" />
     <!-- Compile to "regular" output folder for devs using VS locally -->
     <MSBuild
-      Projects="$(SrcFolder)\Associativy.sln"
+      Projects="$(SrcFolder)\Orchard.sln"
       Targets="Build"/>
   </Target>
 
@@ -133,7 +133,7 @@
   <Target Name ="Test">
     <!-- TeamCity support -->
     <ItemGroup>
-      <NUnitAddinFiles Include="$(teamcity_dotnet_nunitaddin)-2.6.0.*" />
+      <NUnitAddinFiles Include="$(teamcity_dotnet_nunitaddin)-2.5.2.*" />
     </ItemGroup>
     <Copy SourceFiles="@(NUnitAddinFiles)" DestinationFolder="$(LibFolder)\nunit\addins" />
 
@@ -148,7 +148,7 @@
   <Target Name ="Spec" DependsOnTargets="Package-Stage">
     <!-- TeamCity support -->
     <ItemGroup>
-      <NUnitAddinFiles Include="$(teamcity_dotnet_nunitaddin)-2.6.0.*" />
+      <NUnitAddinFiles Include="$(teamcity_dotnet_nunitaddin)-2.5.2.*" />
     </ItemGroup>
     <Copy SourceFiles="@(NUnitAddinFiles)" DestinationFolder="$(LibFolder)\nunit\addins" />
 

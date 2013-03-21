@@ -111,7 +111,7 @@ namespace Orchard.Tests.Modules.Indexing {
 
             var thingType = new ContentTypeDefinitionBuilder()
                 .Named(ThingDriver.ContentTypeName)
-                .WithSetting("TypeIndexing.Included", "true")
+                .WithSetting("TypeIndexing.Indexes", "Search")
                 .Build();
 
             _contentDefinitionManager
@@ -145,7 +145,7 @@ namespace Orchard.Tests.Modules.Indexing {
         public void ShouldNotIndexContentIfIndexDocumentIsEmpty() {
             var alphaType = new ContentTypeDefinitionBuilder()
                 .Named("alpha")
-                .WithSetting("TypeIndexing.Included", "true") // the content types should be indexed, but there is no content at all
+                .WithSetting("TypeIndexing.Indexes", "Search") // the content types should be indexed, but there is no content at all
                 .Build();
 
             _contentDefinitionManager
@@ -211,7 +211,6 @@ namespace Orchard.Tests.Modules.Indexing {
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(2));
 
             _contentManager.Unpublish(content.ContentItem);
-            _contentManager.Flush();
 
             while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) {}
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(1));
@@ -231,7 +230,6 @@ namespace Orchard.Tests.Modules.Indexing {
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(2));
 
             _contentManager.Remove(content.ContentItem);
-            _contentManager.Flush();
 
             while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) { }
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(1));

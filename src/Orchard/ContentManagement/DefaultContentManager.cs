@@ -349,6 +349,10 @@ namespace Orchard.ContentManagement {
             // invoke handlers to acquire state, or at least establish lazy loading callbacks
             Handlers.Invoke(handler => handler.Publishing(context), Logger);
 
+            if(context.Cancel) {
+                return;
+            }
+
             if (previous != null) {
                 previous.Published = false;
             }
@@ -458,7 +462,7 @@ namespace Orchard.ContentManagement {
                 // produce root record to determine the model id
                 contentItem.VersionRecord = new ContentItemVersionRecord {
                     ContentItemRecord = new ContentItemRecord {
-                        ContentType = AcquireContentTypeRecord(contentItem.ContentType)
+                        
                     },
                     Number = 1,
                     Latest = true,
@@ -482,14 +486,18 @@ namespace Orchard.ContentManagement {
             _contentItemRepository.Create(contentItem.Record);
             _contentItemVersionRepository.Create(contentItem.VersionRecord);
 
-
             // build a context with the initialized instance to create
             var context = new CreateContentContext(contentItem);
 
-
             // invoke handlers to add information to persistent stores
             Handlers.Invoke(handler => handler.Creating(context), Logger);
+            
+            // deferring the assignment of ContentType as loading a Record might force NHibernate to AutoFlush 
+            // the ContentPart, and needs the ContentItemRecord to be created before (created in previous statement)
+            contentItem.VersionRecord.ContentItemRecord.ContentType = AcquireContentTypeRecord(contentItem.ContentType);
+
             Handlers.Invoke(handler => handler.Created(context), Logger);
+
 
             if (options.IsPublished) {
                 var publishContext = new PublishContentContext(contentItem, null);
@@ -650,10 +658,6 @@ namespace Orchard.ContentManagement {
             }
 
             return context.Data;
-        }
-
-        public void Flush() {
-            _contentItemRepository.Flush();
         }
 
         private ContentTypeRecord AcquireContentTypeRecord(string contentType) {
