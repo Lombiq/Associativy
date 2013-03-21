@@ -8,6 +8,7 @@ using Orchard.FileSystems.VirtualPath;
 using Orchard.Logging;
 using Orchard.Environment.Extensions;
 using Four2n.Orchard.MiniProfiler.Services;
+using Orchard.UI.PageClass;
 
 namespace Orchard.ContentManagement {
     [OrchardSuppressDependency("Orchard.ContentManagement.DefaultContentDisplay")]
@@ -16,6 +17,7 @@ namespace Orchard.ContentManagement {
         private readonly DefaultContentDisplay _innerContentDisplay;
 
         public ProfilingContentDisplay(
+            IPageClassBuilder pageClassBuilder,
             Lazy<IEnumerable<IContentHandler>> handlers,
             IShapeFactory shapeFactory,
             Lazy<IShapeTableLocator> shapeTableLocator, 
@@ -26,6 +28,7 @@ namespace Orchard.ContentManagement {
         {
 
             _innerContentDisplay = new DefaultContentDisplay(
+                pageClassBuilder,
                 handlers,
                 shapeFactory,
                 shapeTableLocator,
