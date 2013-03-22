@@ -2,7 +2,6 @@
 using Orchard.Commands;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
-using Orchard.ContentPicker.Models;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Navigation.Models;
 using Orchard.Core.Navigation.Services;
@@ -11,6 +10,7 @@ using Orchard.Settings;
 using Orchard.Core.Title.Models;
 using Orchard.UI.Navigation;
 using Orchard.Utility;
+using Orchard.ContentPicker.Models;
 
 namespace Orchard.Pages.Commands {
     public class PageCommands : DefaultOrchardCommandHandler {
