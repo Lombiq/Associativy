@@ -11,6 +11,6 @@ buildazure
 buildtasks
 artifacts
 src/Orchard.Web/App_Data
-src/Orchard.Web/Media/
 syntax: regexp
 (?i)src/.*bin/.*
+src/Orchard.Web/Media/(?!Web.config|OrchardLogo.png).+
