@@ -188,6 +188,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.MediaProcessing", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Taxonomies", "Orchard.Web\Modules\Orchard.Taxonomies\Orchard.Taxonomies.csproj", "{E649EA64-D213-461B-87F7-D67035801443}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Associativy.Frontends.Administration", "Orchard.Web\Modules\Associativy.Frontends.Administration\Associativy.Frontends.Administration.csproj", "{21AF94B0-60E3-4F29-91CC-68BDED957F4D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CodeCoverage|Any CPU = CodeCoverage|Any CPU
@@ -1035,6 +1037,16 @@ Global
 		{E649EA64-D213-461B-87F7-D67035801443}.FxCop|Any CPU.Build.0 = Release|Any CPU
 		{E649EA64-D213-461B-87F7-D67035801443}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E649EA64-D213-461B-87F7-D67035801443}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21AF94B0-60E3-4F29-91CC-68BDED957F4D}.CodeCoverage|Any CPU.ActiveCfg = Release|Any CPU
+		{21AF94B0-60E3-4F29-91CC-68BDED957F4D}.CodeCoverage|Any CPU.Build.0 = Release|Any CPU
+		{21AF94B0-60E3-4F29-91CC-68BDED957F4D}.Coverage|Any CPU.ActiveCfg = Release|Any CPU
+		{21AF94B0-60E3-4F29-91CC-68BDED957F4D}.Coverage|Any CPU.Build.0 = Release|Any CPU
+		{21AF94B0-60E3-4F29-91CC-68BDED957F4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21AF94B0-60E3-4F29-91CC-68BDED957F4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21AF94B0-60E3-4F29-91CC-68BDED957F4D}.FxCop|Any CPU.ActiveCfg = Release|Any CPU
+		{21AF94B0-60E3-4F29-91CC-68BDED957F4D}.FxCop|Any CPU.Build.0 = Release|Any CPU
+		{21AF94B0-60E3-4F29-91CC-68BDED957F4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21AF94B0-60E3-4F29-91CC-68BDED957F4D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1121,5 +1133,6 @@ Global
 		{D3D5B5A7-F9EA-406D-9B01-E567FA7A2B2E} = {65D8AD91-DBDF-4DD7-86A6-E827115B6AD9}
 		{CAE8555E-F636-4C97-97A7-A041D3490D28} = {65D8AD91-DBDF-4DD7-86A6-E827115B6AD9}
 		{7528BF74-25C7-4ABE-883A-443B4EEC4776} = {65D8AD91-DBDF-4DD7-86A6-E827115B6AD9}
+		{21AF94B0-60E3-4F29-91CC-68BDED957F4D} = {65D8AD91-DBDF-4DD7-86A6-E827115B6AD9}
 	EndGlobalSection
 EndGlobal
