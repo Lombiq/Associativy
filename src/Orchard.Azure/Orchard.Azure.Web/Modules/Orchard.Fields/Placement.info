@@ -23,10 +23,6 @@
   <Place Fields_DateTime_Edit="Content:2.5"/>
   <Place Fields_DateTime="Content:after"/>
 
-  <!-- MediaPicker -->
-  <Place Fields_MediaPicker_Edit="Content:2.3"/>
-  <Place Fields_MediaPicker="Content:after"/>
-
   <Match DisplayType="SummaryAdmin">
     <Place Fields_DateTime="Content"/>
   </Match>

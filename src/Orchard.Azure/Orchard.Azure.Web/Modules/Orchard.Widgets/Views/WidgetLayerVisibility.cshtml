@@ -4,6 +4,15 @@
     Script.Require("jQuery");
     IEnumerable<LayerPart> layers = Model.Layers;
 }
+@functions {
+    static string EncodeLineBreaks(string text) {
+		if (!String.IsNullOrEmpty(text)){
+			return text.Replace(Environment.NewLine, "\\\\n");
+		}
+	
+		return text;
+    }
+}
 <script type="text/javascript">
 //<![CDATA[
     document.write("<div id=\"widgets-layer-visibility\"><h3>@T("All Layers:")</h3></div>");
@@ -16,7 +25,7 @@
         var currentLayerId = @Model.CurrentLayer.Id;
         var layers = [
         @foreach (var layer in layers) {
-            <text>{"name":"@layer.Name","description":"@layer.Description","id":@layer.Id}@(layer != layers.Last() ? "," : "")</text>
+            <text>{"name":"@layer.Name","description":"@EncodeLineBreaks(layer.Description)","id":@layer.Id}@(layer != layers.Last() ? "," : "")</text>
         }
         ];
         var visWrapper = $("#widgets-layer-visibility");
@@ -40,8 +49,7 @@
 
             visContainer.append(layer);
         }
-
-        $("#widgets-layer-visibility .widgets-other-layer").live("click", function() {
+        $(document).on("click", "#widgets-layer-visibility .widgets-other-layer", function() {
             var _this = $(this);
             _this.toggleClass("off");
             if (_this.hasClass("off")) {
@@ -51,10 +59,10 @@
                 _this.data("widgets").show();
             }
         });
-        $("#widgets-layer-visibility .widgets-other-layer").live("hover", function() {
+        $(document).on("hover", "#widgets-layer-visibility .widgets-other-layer", function() {
             $(this).data("widgets").toggleClass("on");
         });
-        $("#widgets-zones .widgets-other-layer").live("hover", function() {
+        $(document).on("hover", "#widgets-zones .widgets-other-layer", function() {   
             var layer = $(this).data("widgets-vis-control");
             layer.toggleClass("on");
             layer.data("widgets").toggleClass("on");

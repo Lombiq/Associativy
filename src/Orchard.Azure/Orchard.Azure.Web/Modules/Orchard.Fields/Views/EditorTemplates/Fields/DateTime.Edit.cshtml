@@ -24,7 +24,9 @@
         }
         @if(Model.ShowDate) { <text>@Html.ValidationMessageFor(m=>m.Date)</text> } @if(Model.ShowTime) { <text>@Html.ValidationMessageFor(m=>m.Time)</text> }
     
+        @if (HasText(Model.Hint)) {
         <span class="hint">@Model.Hint</span>
+        }
     </fieldset>
 
 @using(Script.Foot()) {
@@ -36,6 +38,7 @@
 <script type="text/javascript">    
 //<![CDATA[
     $(function () {
+
         $("#@Html.FieldIdFor(m => Model.Date)").datepicker({ showAnim: "" });
         @if(Model.ShowTime) {
             <text>$("#@Html.FieldIdFor(m => Model.Time)").timepicker({ stepMinute: 5 });</text>

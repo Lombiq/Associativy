@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Security;
 
 [assembly: AssemblyTitle("Markdown")]
 [assembly: AssemblyDescription("")]
@@ -27,6 +26,6 @@ using System.Security;
 //
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
-[assembly: AssemblyVersion("1.5")]
-[assembly: AssemblyFileVersion("1.5")]
+[assembly: AssemblyVersion("1.7")]
+[assembly: AssemblyFileVersion("1.7")]
 

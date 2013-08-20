@@ -19,6 +19,7 @@ using Orchard.UI.Notify;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.ContentTypes.Controllers {
+    [ValidateInput(false)]
     public class AdminController : Controller, IUpdateModel {
         private readonly IContentDefinitionService _contentDefinitionService;
         private readonly IContentDefinitionManager _contentDefinitionManager;
@@ -51,6 +52,9 @@ namespace Orchard.ContentTypes.Controllers {
         #region Types
 
         public ActionResult List() {
+            if (!Services.Authorizer.Authorize(Permissions.ViewContentTypes, T("Not allowed to view content types.")))
+                return new HttpUnauthorizedResult();
+
             return View("List", new ListContentTypesViewModel {
                 Types = _contentDefinitionService.GetTypes()
             });
@@ -143,9 +147,6 @@ namespace Orchard.ContentTypes.Controllers {
 
             if (contentTypeDefinition == null)
                 return HttpNotFound();
-
-            var content = Services.ContentManager.New(id);
-            var shape = Services.ContentManager.BuildEditor(content);
 
             var placementModel = new EditPlacementViewModel {
                 PlacementSettings = contentTypeDefinition.GetPlacement(PlacementType.Editor),
@@ -253,7 +254,7 @@ namespace Orchard.ContentTypes.Controllers {
 
             Services.Notifier.Information(T("\"{0}\" settings have been saved.", typeViewModel.DisplayName));
 
-            return RedirectToAction("List");
+            return RedirectToAction("Edit", new { id });
         }
 
         [HttpPost, ActionName("Edit")]
@@ -287,7 +288,7 @@ namespace Orchard.ContentTypes.Controllers {
                 Type = typeViewModel,
                 PartSelections = _contentDefinitionService.GetParts(false/*metadataPartsOnly*/)
                     .Where(cpd => !typeViewModel.Parts.Any(p => p.PartDefinition.Name == cpd.Name) && cpd.Settings.GetModel<ContentPartSettings>().Attachable)
-                    .Select(cpd => new PartSelectionViewModel { PartName = cpd.Name, PartDisplayName = cpd.DisplayName })
+                    .Select(cpd => new PartSelectionViewModel { PartName = cpd.Name, PartDisplayName = cpd.DisplayName, PartDescription = cpd.Description})
             };
 
             return View(viewModel);

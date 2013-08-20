@@ -1,21 +1,15 @@
 ﻿using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
-using Orchard.Core.Navigation.Services;
 using Orchard.Data.Migration;
 
 namespace Orchard.Core.Navigation {
     public class Migrations : DataMigrationImpl {
-        private readonly IMenuService _menuService;
-
-        public Migrations(IMenuService menuService ) {
-            _menuService = menuService;
-        }
 
         public int Create() {
-            ContentDefinitionManager.AlterPartDefinition("MenuPart", builder => builder.Attachable());
-            ContentDefinitionManager.AlterPartDefinition("NavigationPart", builder => builder.Attachable());
-            ContentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg.WithPart("NavigationPart"));
-            
+            ContentDefinitionManager.AlterPartDefinition("MenuPart", builder => builder
+                .Attachable()
+                .WithDescription("Provides an easy way to create a ContentMenuItem from the content editor."));
+
             SchemaBuilder.CreateTable("MenuItemPartRecord", 
                 table => table
                     .ContentPartRecord()
@@ -81,25 +75,26 @@ namespace Orchard.Core.Navigation {
                 .WithSetting("Stereotype", "MenuItem")
                 );
             
-            ContentDefinitionManager.AlterPartDefinition("AdminMenuPart", builder => builder.Attachable());
+            ContentDefinitionManager.AlterPartDefinition("AdminMenuPart", builder => builder
+                .Attachable()
+                .WithDescription("Adds a menu item to the Admin menu that links to this content item."));
 
-            SchemaBuilder.CreateTable("ContentMenuItemPartRecord",
-                table => table
-                    .ContentPartRecord()
-                    .Column<int>("ContentMenuItemRecord_id")
+            SchemaBuilder.CreateTable("ShapeMenuItemPartRecord",
+                table => table.ContentPartRecord()
+                    .Column<string>("ShapeType")
                 );
 
-            ContentDefinitionManager.AlterTypeDefinition("ContentMenuItem", cfg => cfg
-                .WithPart("MenuPart")
-                .WithPart("CommonPart")
-                .WithPart("IdentityPart")
-                .WithPart("ContentMenuItemPart")
-                .DisplayedAs("Content Menu Item")
-                .WithSetting("Description", "Adds a Content Item to the menu.")
-                .WithSetting("Stereotype", "MenuItem")
+            ContentDefinitionManager.AlterTypeDefinition("ShapeMenuItem",
+                cfg => cfg
+                    .WithPart("ShapeMenuItemPart")
+                    .WithPart("MenuPart")
+                    .WithPart("CommonPart")
+                    .DisplayedAs("Shape Link")
+                    .WithSetting("Description", "Injects menu items from a Shape")
+                    .WithSetting("Stereotype", "MenuItem")
                 );
 
-            return 3;
+            return 4;
         }
 
         public int UpdateFrom1() {
@@ -163,39 +158,37 @@ namespace Orchard.Core.Navigation {
                 .WithSetting("Stereotype", "MenuItem")
                );
 
-            ContentDefinitionManager.AlterPartDefinition("NavigationPart", builder => builder.Attachable());
-
-            SchemaBuilder.CreateTable("ContentMenuItemPartRecord",
-                table => table
-                    .ContentPartRecord()
-                    .Column<int>("ContentMenuItemRecord_id")
-                );
-
-            ContentDefinitionManager.AlterTypeDefinition("ContentMenuItem", cfg => cfg
-                .WithPart("MenuPart")
-                .WithPart("CommonPart")
-                .WithPart("IdentityPart")
-                .WithPart("ContentMenuItemPart")
-                .DisplayedAs("Content Menu Item")
-                .WithSetting("Description", "Adds a Content Item to the menu.")
-                .WithSetting("Stereotype", "MenuItem")
-                );
-
-            // create a Main Menu
-            var mainMenu = _menuService.Create("Main Menu");
-
-            // assign the Main Menu to all current menu items
-            foreach (var menuItem in _menuService.Get()) {
-                // if they don't have a position or a text, then they are not displayed
-                if(string.IsNullOrWhiteSpace(menuItem.MenuPosition) || string.IsNullOrEmpty(menuItem.MenuText)) {
-                    continue;
-                }
-                menuItem.Menu = mainMenu.ContentItem;
-            }
-
-            // at this point a widget should still be created to display the navigation
-
             return 3;
+        }
+
+        public int UpdateFrom3() {
+            SchemaBuilder.CreateTable("ShapeMenuItemPartRecord",
+                table => table.ContentPartRecord()
+                    .Column<string>("ShapeType")
+                );
+
+            ContentDefinitionManager.AlterTypeDefinition("ShapeMenuItem",
+                cfg => cfg
+                    .WithPart("ShapeMenuItemPart")
+                    .WithPart("MenuPart")
+                    .WithPart("CommonPart")
+                    .DisplayedAs("Shape Link")
+                    .WithSetting("Description", "Injects menu items from a Shape")
+                    .WithSetting("Stereotype", "MenuItem")
+                );
+
+            return 4;
+        }
+
+        public int UpdateFrom4() {
+            ContentDefinitionManager.AlterPartDefinition("MenuPart", builder => builder
+                .WithDescription("Provides an easy way to create a ContentMenuItem from the content editor."));
+
+            ContentDefinitionManager.AlterPartDefinition("AdminMenuPart", builder => builder
+                .Attachable()
+                .WithDescription("Adds a menu item to the Admin menu that links to this content item."));
+
+            return 5;
         }
     }
 }

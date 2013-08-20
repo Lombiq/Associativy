@@ -36,15 +36,16 @@ namespace Orchard.Search.Controllers {
         public Localizer T { get; set; }
 
         public ActionResult Index(PagerParameters pagerParameters, string searchText = "") {
-            Pager pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
-            var searchFields = Services.WorkContext.CurrentSite.As<SearchSettingsPart>().SearchedFields;
-
+            var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
+            var searchSettingsPart = Services.WorkContext.CurrentSite.As<SearchSettingsPart>();
+            
             IPageOfItems<ISearchHit> searchHits = new PageOfItems<ISearchHit>(new ISearchHit[] { });
             try {
 
                 searchHits = _searchService.Query(searchText, pager.Page, pager.PageSize,
                                                   Services.WorkContext.CurrentSite.As<SearchSettingsPart>().Record.FilterCulture,
-                                                  searchFields,
+                                                  searchSettingsPart.SearchIndex,
+                                                  searchSettingsPart.SearchedFields,
                                                   searchHit => searchHit);
             }
             catch (Exception exception) {
@@ -53,7 +54,7 @@ namespace Orchard.Search.Controllers {
             }
 
             var list = Services.New.List();
-            foreach (var contentItem in searchHits.Select(searchHit => Services.ContentManager.Get(searchHit.ContentItemId))) {
+            foreach (var contentItem in Services.ContentManager.GetMany<IContent>(searchHits.Select(x => x.ContentItemId), VersionOptions.Published, QueryHints.Empty)) {
                 // ignore search results which content item has been removed or unpublished
                 if (contentItem == null) {
                     searchHits.TotalItemCount--;

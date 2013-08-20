@@ -54,8 +54,8 @@ Scenario: Creating and using Date fields
 		And I am redirected
 	Then I should see "Your Event has been created."
 	When I go to "Admin/Contents/List"
-	Then I should see "Date of the event:" 
-		And I should see "1/31/2012  12:00"
+	Then I should see "Date of the event" 
+		And I should see "1/31/2012 12:00"
 
 	# The hint should be displayed
 	When I go to "Admin/ContentTypes/Edit/Event"

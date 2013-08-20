@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.Routing;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Navigation.Models;
@@ -57,7 +59,6 @@ namespace Orchard.Core.Navigation.Controllers {
                 : menus.FirstOrDefault(menu => menu.Id == menuId);
 
             if (currentMenu == null && menuId != null) { // incorrect menu id passed
-                Services.Notifier.Error(T("Menu not found: {0}", menuId));
                 return RedirectToAction("Index");
             }
 
@@ -78,7 +79,7 @@ namespace Orchard.Core.Navigation.Controllers {
         }
 
         [HttpPost, ActionName("Index")]
-        public ActionResult IndexPOST(IList<MenuItemEntry> menuItemEntries) {
+        public ActionResult IndexPOST(IList<MenuItemEntry> menuItemEntries, int? menuId) {
             if (!Services.Authorizer.Authorize(Permissions.ManageMainMenu, T("Couldn't manage the main menu")))
                 return new HttpUnauthorizedResult();
 
@@ -90,7 +91,7 @@ namespace Orchard.Core.Navigation.Controllers {
                 }
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { menuId });
         }
 
         private MenuItemEntry CreateMenuItemEntries(MenuPart menuPart) {
@@ -112,18 +113,30 @@ namespace Orchard.Core.Navigation.Controllers {
                 return new HttpUnauthorizedResult();
 
             MenuPart menuPart = _menuService.Get(id);
+            int? menuId = null;
 
             if (menuPart != null) {
-                // if the menu item is a concrete content item, don't delete it, just unreference the menu
-                if (!menuPart.ContentItem.TypeDefinition.Settings.ContainsKey("Stereotype") || menuPart.ContentItem.TypeDefinition.Settings["Stereotype"] != "MenuItem") {
-                    menuPart.Menu = null;
+                menuId = menuPart.Menu.Id;
+
+                // get all sub-menu items from the same menu
+                var menuItems = _menuService.GetMenuParts(menuPart.Menu.Id)
+                    .Where(x => x.MenuPosition.StartsWith(menuPart.MenuPosition + "."))
+                    .Select(x => x.As<MenuPart>())
+                    .ToList();
+
+                foreach (var menuItem in menuItems.Concat(new [] {menuPart})) {
+                    // if the menu item is a concrete content item, don't delete it, just unreference the menu
+                    if (!menuPart.ContentItem.TypeDefinition.Settings.ContainsKey("Stereotype") || menuPart.ContentItem.TypeDefinition.Settings["Stereotype"] != "MenuItem") {
+                        menuPart.Menu = null;
+                    }
+                    else {
+                        _menuService.Delete(menuItem);
+                    }
                 }
-                else {
-                    _menuService.Delete(menuPart);
-                }
+
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { menuId });
         }
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {

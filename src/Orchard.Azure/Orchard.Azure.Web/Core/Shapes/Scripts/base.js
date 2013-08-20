@@ -113,13 +113,13 @@
                         _this.val(_this.attr("placeholder")).addClass("placeholderd");
                     }
                 })
-                .live("focus", function () {
+                .on("focus", function () {
                     var _this = $(this);
                     if (_this.val() === _this.attr("placeholder")) {
                         _this.val("").removeClass("placeholderd");
                     }
                 })
-                .live("blur", function () {
+                .on("blur", function () {
                     var _this = $(this);
                     if (_this.val() === "") {
                         _this.val(_this.attr("placeholder")).addClass("placeholderd");
@@ -127,7 +127,7 @@
                 });
 
             //make sure the placeholder value is not taken as the input value when submitting forms
-            $("form").live("submit", function () {
+            $("form").on("submit", function () {
                 $(":input[placeholder].placeholderd").val("");
             });
 
@@ -136,16 +136,34 @@
         toggleWhatYouControl: function () {
             var _this = $(this);
             var _controllees = $("[data-controllerid=" + _this.attr("id") + "]");
-            var _controlleesAreHidden = _controllees.is(":hidden");
-            if (_this.is(":checked") || _this.is(":selected")) {
-                if (_controlleesAreHidden) {
-                    _controllees.hide(); // <- unhook this when the following comment applies
-                    $(_controllees.show()[0]).find("input").focus(); // <- aaaand a slideDown there...eventually
+
+            var hide = true;
+
+
+            _controllees.each(function () {
+                var _controllee = $(this);
+                var hidden = _controllee.attr("data-defaultstate") == "hidden";
+                var _controlleeIsHidden = _controllee.is(":hidden");
+
+                if (_this.is(":checked") || _this.is(":selected")) {
+                    hide = hidden;
                 }
-            } else if (!_controlleesAreHidden) {
-                //_controllees.slideUp(200); <- hook this back up when chrome behaves, or when I care less...or when chrome behaves
-                _controllees.hide()
-            }
+                else {
+                    hide = !hidden;
+                }
+
+                if (!hide) {
+                    if (_controlleeIsHidden) {
+                        _controllee.hide().show(); // <- unhook this when the following comment applies
+                    }
+                } else if (!_controlleeIsHidden) {
+                    // _controllees.slideUp(200); // <- hook this back up when chrome behaves, or when I care less...or when chrome behaves
+                    _controllee.hide()
+                }
+            });
+
+            _controllees.find("input").first().focus(); // <- aaaand a slideDown there...eventually
+
             return _this;
         }
     });
@@ -170,6 +188,13 @@
                     controller.toggleWhatYouControl();
                 });
             }
+
+            // if data-defaultstate is 'hidden' hide it by default
+            var hidden = $(this).attr("data-defaultstate") == "hidden";
+            if (hidden) {
+                $(this).hide();
+            }
+
         });
     });
     // inline form link buttons (form.inline.link button) swapped out for a link that submits said form
@@ -198,7 +223,7 @@
     $(function () {
         var magicToken = $("input[name=__RequestVerificationToken]").first();
         if (!magicToken) { return; } // no sense in continuing if form POSTS will fail
-        $("a[itemprop~=UnsafeUrl]").each(function () {
+        $("a[itemprop~=UnsafeUrl]").on("click", function() {
             var _this = $(this);
             var hrefParts = _this.attr("href").split("?");
             var form = $("<form action=\"" + hrefParts[0] + "\" method=\"POST\" />");
@@ -213,16 +238,16 @@
             }
             form.css({ "position": "absolute", "left": "-9999em" });
             $("body").append(form);
-            _this.click(function () {
-                if (_this.filter("[itemprop~='RemoveUrl']").length == 1) {
-                    if (!confirm(confirmRemoveMessage)) {
-                        return false;
-                    }
-                }
 
-                form.submit();
-                return false;
-            });
+            if (_this.filter("[itemprop~='RemoveUrl']").length == 1) {
+                if (!confirm(confirmRemoveMessage)) {
+                    return false;
+                }
+            }
+
+            form.submit();
+            return false;
+
         });
     });
 })(jQuery);
