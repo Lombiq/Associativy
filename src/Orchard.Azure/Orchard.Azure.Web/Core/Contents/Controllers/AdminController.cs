@@ -21,6 +21,7 @@ using Orchard.Mvc.Html;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
 using Orchard.Settings;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Core.Contents.Controllers {
     [ValidateInput(false)]
@@ -67,18 +68,18 @@ namespace Orchard.Core.Contents.Controllers {
                                             : contentTypeDefinition.Name;
                 query = query.ForType(model.TypeName);
             }
-            
+
             switch (model.Options.OrderBy) {
                 case ContentsOrder.Modified:
                     //query = query.OrderByDescending<ContentPartRecord, int>(ci => ci.ContentItemRecord.Versions.Single(civr => civr.Latest).Id);
-                    query = query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.ModifiedUtc);
+                    query = query.OrderByDescending<CommonPartRecord>(cr => cr.ModifiedUtc);
                     break;
                 case ContentsOrder.Published:
-                    query = query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.PublishedUtc);
+                    query = query.OrderByDescending<CommonPartRecord>(cr => cr.PublishedUtc);
                     break;
                 case ContentsOrder.Created:
                     //query = query.OrderByDescending<ContentPartRecord, int>(ci => ci.Id);
-                    query = query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.CreatedUtc);
+                    query = query.OrderByDescending<CommonPartRecord>(cr => cr.CreatedUtc);
                     break;
             }
 
@@ -104,7 +105,7 @@ namespace Orchard.Core.Contents.Controllers {
         }
 
         private IEnumerable<ContentTypeDefinition> GetCreatableTypes(bool andContainable) {
-            return _contentDefinitionManager.ListTypeDefinitions().Where(ctd => ctd.Settings.GetModel<ContentTypeSettings>().Creatable && (!andContainable || ctd.Parts.Any(p => p.PartDefinition.Name == "ContainablePart")) );
+            return _contentDefinitionManager.ListTypeDefinitions().Where(ctd => ctd.Settings.GetModel<ContentTypeSettings>().Creatable && (!andContainable || ctd.Parts.Any(p => p.PartDefinition.Name == "ContainablePart")));
         }
 
         [HttpPost, ActionName("List")]
@@ -123,16 +124,17 @@ namespace Orchard.Core.Contents.Controllers {
 
             return RedirectToAction("List", routeValues);
         }
-        
+
         [HttpPost, ActionName("List")]
         [FormValueRequired("submit.BulkEdit")]
         public ActionResult ListPOST(ContentOptions options, IEnumerable<int> itemIds, string returnUrl) {
             if (itemIds != null) {
+                var checkedContentItems = _contentManager.GetMany<ContentItem>(itemIds, VersionOptions.Latest, QueryHints.Empty);
                 switch (options.BulkAction) {
                     case ContentsBulkAction.None:
                         break;
                     case ContentsBulkAction.PublishNow:
-                        foreach (var item in itemIds.Select(itemId => _contentManager.GetLatest(itemId))) {
+                        foreach (var item in checkedContentItems) {
                             if (!Services.Authorizer.Authorize(Permissions.PublishContent, item, T("Couldn't publish selected content."))) {
                                 _transactionManager.Cancel();
                                 return new HttpUnauthorizedResult();
@@ -143,7 +145,7 @@ namespace Orchard.Core.Contents.Controllers {
                         Services.Notifier.Information(T("Content successfully published."));
                         break;
                     case ContentsBulkAction.Unpublish:
-                        foreach (var item in itemIds.Select(itemId => _contentManager.GetLatest(itemId))) {
+                        foreach (var item in checkedContentItems) {
                             if (!Services.Authorizer.Authorize(Permissions.PublishContent, item, T("Couldn't unpublish selected content."))) {
                                 _transactionManager.Cancel();
                                 return new HttpUnauthorizedResult();
@@ -154,7 +156,7 @@ namespace Orchard.Core.Contents.Controllers {
                         Services.Notifier.Information(T("Content successfully unpublished."));
                         break;
                     case ContentsBulkAction.Remove:
-                        foreach (var item in itemIds.Select(itemId => _contentManager.GetLatest(itemId))) {
+                        foreach (var item in checkedContentItems) {
                             if (!Services.Authorizer.Authorize(Permissions.DeleteContent, item, T("Couldn't remove selected content."))) {
                                 _transactionManager.Cancel();
                                 return new HttpUnauthorizedResult();
@@ -212,7 +214,7 @@ namespace Orchard.Core.Contents.Controllers {
         [HttpPost, ActionName("Create")]
         [FormValueRequired("submit.Publish")]
         public ActionResult CreateAndPublishPOST(string id, string returnUrl) {
-            
+
             // pass a dummy content to the authorization check to check for "own" variations
             var dummyContent = _contentManager.New(id);
 
@@ -296,11 +298,11 @@ namespace Orchard.Core.Contents.Controllers {
                 return new HttpUnauthorizedResult();
 
             string previousRoute = null;
-            if(contentItem.Has<IAliasAspect>() 
-                &&!string.IsNullOrWhiteSpace(returnUrl) 
-                && Url.IsLocalUrl(returnUrl)
+            if (contentItem.Has<IAliasAspect>()
+                && !string.IsNullOrWhiteSpace(returnUrl)
+                && Request.IsLocalUrl(returnUrl)
                 // only if the original returnUrl is the content itself
-                && String.Equals(returnUrl, Url.ItemDisplayUrl(contentItem), StringComparison.OrdinalIgnoreCase) 
+                && String.Equals(returnUrl, Url.ItemDisplayUrl(contentItem), StringComparison.OrdinalIgnoreCase)
                 ) {
                 previousRoute = contentItem.As<IAliasAspect>().Path;
             }
@@ -314,17 +316,53 @@ namespace Orchard.Core.Contents.Controllers {
 
             conditionallyPublish(contentItem);
 
-            if (!string.IsNullOrWhiteSpace(returnUrl) 
-                && previousRoute != null 
+            if (!string.IsNullOrWhiteSpace(returnUrl)
+                && previousRoute != null
                 && !String.Equals(contentItem.As<IAliasAspect>().Path, previousRoute, StringComparison.OrdinalIgnoreCase)) {
                 returnUrl = Url.ItemDisplayUrl(contentItem);
             }
-            
+
             Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName)
                 ? T("Your content has been saved.")
                 : T("Your {0} has been saved.", contentItem.TypeDefinition.DisplayName));
 
             return this.RedirectLocal(returnUrl, () => RedirectToAction("Edit", new RouteValueDictionary { { "Id", contentItem.Id } }));
+        }
+
+        [HttpPost]
+        public ActionResult Clone(int id, string returnUrl) {
+            // Mostly taken from: http://orchard.codeplex.com/discussions/396664
+            var contentItem = _contentManager.GetLatest(id);
+
+            if (contentItem == null)
+                return HttpNotFound();
+
+            if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("Couldn't clone content")))
+                return new HttpUnauthorizedResult();
+
+            var importContentSession = new ImportContentSession(_contentManager);
+
+            var element = _contentManager.Export(contentItem);
+
+            // if a handler prevents this element from being exported, it can't be cloned
+            if (element == null) {
+                Services.Notifier.Warning(T("Could not clone the content item."));
+                return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
+            }
+
+            var elementId = element.Attribute("Id");
+            var copyId = elementId.Value + "-copy";
+            elementId.SetValue(copyId);
+            var status = element.Attribute("Status");
+            if (status != null) status.SetValue("Draft"); // So the copy is always a draft.
+
+            importContentSession.Set(copyId, element.Name.LocalName);
+
+            _contentManager.Import(element, importContentSession);
+
+            Services.Notifier.Information(T("Successfully cloned. The clone was saved as a draft."));
+
+            return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
         }
 
         [HttpPost]
@@ -354,7 +392,7 @@ namespace Orchard.Core.Contents.Controllers {
                 return new HttpUnauthorizedResult();
 
             _contentManager.Publish(contentItem);
-            Services.ContentManager.Flush();
+
             Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName) ? T("That content has been published.") : T("That {0} has been published.", contentItem.TypeDefinition.DisplayName));
 
             return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
@@ -370,7 +408,7 @@ namespace Orchard.Core.Contents.Controllers {
                 return new HttpUnauthorizedResult();
 
             _contentManager.Unpublish(contentItem);
-            Services.ContentManager.Flush();
+
             Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName) ? T("That content has been unpublished.") : T("That {0} has been unpublished.", contentItem.TypeDefinition.DisplayName));
 
             return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));

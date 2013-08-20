@@ -4,9 +4,9 @@ using System.Collections;
 using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
-using ClaySharp;
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
+using Orchard.DisplayManagement.Shapes;
 
 namespace Orchard.DesignerTools.Services {
     
@@ -86,8 +86,33 @@ namespace Orchard.DesignerTools.Services {
                     DumpShape((IShape) o);
 
                     // a shape can also be IEnumerable
-                    if (o is IEnumerable) {
-                        DumpEnumerable((IEnumerable) o);
+                    if (o is Shape) {
+                        var items = o.GetType()
+                            .GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                            .FirstOrDefault(m => m.Name == "Items");
+
+                        var classes = o.GetType()
+                            .GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                            .FirstOrDefault(m => m.Name == "Classes");
+
+                        var attributes = o.GetType()
+                            .GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                            .FirstOrDefault(m => m.Name == "Attributes");
+
+                        if (classes != null) {
+                            DumpMember(o, classes);
+                        }
+
+                        if (attributes != null) {
+                            DumpMember(o, attributes);
+                        }
+
+                        if (items != null) {
+                            DumpMember(o, items);
+                        }
+                        
+
+                        // DumpEnumerable((IEnumerable) o);
                     }
                 }
                 else if (o is IEnumerable) {
@@ -109,7 +134,7 @@ namespace Orchard.DesignerTools.Services {
                 .Where(m => !m.Name.StartsWith("_")) // remove members with a name starting with '_' (usually proxied objects)
                 .ToList();
 
-            if(members.Count() == 0) {
+            if(!members.Any()) {
                 return;
             }
 
@@ -169,12 +194,19 @@ namespace Orchard.DesignerTools.Services {
         }
 
         private void DumpShape(IShape shape) {
-            var members = new Dictionary<string, object>();
-            ((IClayBehaviorProvider) (dynamic) shape).Behavior.GetMembers(() => null, shape, members);
+            var value = shape as Shape;
 
-            foreach (var key in members.Keys.Where(key => !key.StartsWith("_"))) {
+            if (value == null) {
+                return;
+            }
+
+            foreach (DictionaryEntry entry in value.Properties) {
                 // ignore private members (added dynamically by the shape wrapper)
-                Dump(members[key], key);
+                if (entry.Key.ToString().StartsWith("_")) {
+                    continue;
+                }
+
+                Dump(entry.Value, entry.Key.ToString());
             }
         }
 
@@ -214,8 +246,9 @@ namespace Orchard.DesignerTools.Services {
         }
 
         private static string FormatType(object item) {
-            if(item is IShape) {
-                return ((IShape)item).Metadata.Type + " Shape";
+            var shape = item as IShape;
+            if (shape != null) {
+                return shape.Metadata.Type + " Shape";
             }
 
             return FormatType(item.GetType());
@@ -223,7 +256,7 @@ namespace Orchard.DesignerTools.Services {
 
         private static string FormatType(Type type) {
             if (type.IsGenericType) {
-                var genericArguments = String.Join(", ", type.GetGenericArguments().Select(t => FormatType((Type)t)).ToArray());
+                var genericArguments = String.Join(", ", type.GetGenericArguments().Select(FormatType).ToArray());
                 return String.Format("{0}<{1}>", type.Name.Substring(0, type.Name.IndexOf('`')), genericArguments);
             }
 
@@ -244,17 +277,16 @@ namespace Orchard.DesignerTools.Services {
         }
 
         private void RestoreCurrentNode() {
-            if (_current.DescendantNodes().Count() == 0) {
+            if (!_current.DescendantNodes().Any()) {
                 _current.Remove();
             }
             
             _current = _currents.Pop();
         }
 
-        private XElement EnterNode(string tag) {
+        private void EnterNode(string tag) {
             SaveCurrentNode();
             _current.Add(_current = new XElement(tag));
-            return _current;
         }
     }
 }

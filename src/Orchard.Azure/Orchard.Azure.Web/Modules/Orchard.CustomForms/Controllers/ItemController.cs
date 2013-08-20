@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
@@ -18,6 +19,7 @@ using Orchard.UI.Notify;
 
 namespace Orchard.CustomForms.Controllers {
     [Themed(true)]
+    [ValidateInput(false)]
     public class ItemController : Controller, IUpdateModel {
         private readonly IContentManager _contentManager;
         private readonly ITransactionManager _transactionManager;
@@ -67,7 +69,7 @@ namespace Orchard.CustomForms.Controllers {
             dynamic model = _contentManager.BuildEditor(contentItem);
 
             model
-                .ContenItem(form)
+                .ContentItem(form)
                 .ReturnUrl(Url.RouteUrl(_contentManager.GetItemMetadata(form).DisplayRouteValues));
 
             // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
@@ -125,10 +127,21 @@ namespace Orchard.CustomForms.Controllers {
                 _transactionManager.Cancel();
 
                 // if custom form is inside a widget, we display the form itself
-                if (form.ContentType == "CustomFormWidget") {}
+                if (form.ContentType == "CustomFormWidget") {
+                    foreach (var error in ModelState.Values.SelectMany(m => m.Errors).Select(e => e.ErrorMessage)) {
+                        Services.Notifier.Error(T(error));
+                    }
 
-                // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-                return View((object)model);
+                    // save the updated editor shape into TempData to survive a redirection and keep the edited values
+                    TempData["CustomFormWidget.InvalidCustomFormState"] = model;
+
+                    if (returnUrl != null) {
+                        return this.RedirectLocal(returnUrl);
+                    }
+                }
+
+                model.ContentItem(form);
+                return View(model);
             }
 
             contentItem.As<ICommonPart>().Container = customForm.ContentItem;
@@ -156,7 +169,8 @@ namespace Orchard.CustomForms.Controllers {
                 }
             }
 
-            return this.RedirectLocal(returnUrl, () => Redirect(Request.RawUrl));
+            var referrer = Request.UrlReferrer != null ? Request.UrlReferrer.ToString() : null;
+            return this.RedirectLocal(returnUrl, () => this.RedirectLocal(referrer, () => Redirect(Request.RawUrl)));
         }
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {

@@ -6,6 +6,7 @@ using Autofac;
 using Moq;
 using NHibernate;
 using NUnit.Framework;
+using Orchard.Caching;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.ContentManagement.MetaData.Models;
@@ -13,6 +14,7 @@ using Orchard.Data;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.Records;
+using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Tests.ContentManagement.Handlers;
 using Orchard.Tests.ContentManagement.Records;
@@ -59,9 +61,12 @@ namespace Orchard.Tests.ContentManagement {
             var builder = new ContainerBuilder();
             builder.RegisterType<DefaultContentQuery>().As<IContentQuery>();
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
+            builder.RegisterType<StubCacheManager>().As<ICacheManager>();
+            builder.RegisterType<Signals>().As<ISignals>();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterInstance(_contentDefinitionManager.Object);
             builder.RegisterInstance(new Mock<IContentDisplay>().Object);
+            builder.RegisterInstance(new ShellSettings {Name = ShellSettings.DefaultName, DataProvider = "SqlCe"});
 
             builder.RegisterType<AlphaPartHandler>().As<IContentHandler>();
             builder.RegisterType<BetaPartHandler>().As<IContentHandler>();
@@ -87,8 +92,10 @@ namespace Orchard.Tests.ContentManagement {
             _manager = _container.Resolve<IContentManager>();
         }
 
-        public class TestSessionLocator : ISessionLocator, ITransactionManager {
+        public class TestSessionLocator : ISessionLocator, ITransactionManager, IDisposable {
             private readonly ISession _session;
+            private ITransaction _transaction;
+            private bool _cancelled;
 
             public TestSessionLocator(ISession session) {
                 _session = session;
@@ -98,16 +105,64 @@ namespace Orchard.Tests.ContentManagement {
                 return _session;
             }
 
-            public void Demand() {
+            void ITransactionManager.Demand() {
+                EnsureSession();
+
+                if (_transaction == null) {
+                    _transaction = _session.BeginTransaction(IsolationLevel.ReadCommitted);
+                }
             }
 
-            public void RequireNew() {
+            void ITransactionManager.RequireNew() {
+                ((ITransactionManager)this).RequireNew(IsolationLevel.ReadCommitted);
             }
 
-            public void RequireNew(IsolationLevel level) {
+            void ITransactionManager.RequireNew(IsolationLevel level) {
+                EnsureSession();
+
+                if (_cancelled) {
+                    _transaction.Rollback();
+                    _transaction.Dispose();
+                    _transaction = null;
+                }
+                else {
+                    if (_transaction != null) {
+                        _transaction.Commit();
+                    }
+                }
+
+                _transaction = _session.BeginTransaction(level);
             }
 
-            public void Cancel() {
+            void ITransactionManager.Cancel() {
+                _cancelled = true;
+            }
+
+            void IDisposable.Dispose() {
+                if (_transaction != null) {
+                    try {
+                        if (!_cancelled) {
+                            _transaction.Commit();
+                        }
+                        else {
+                            _transaction.Rollback();
+                        }
+
+                        _transaction.Dispose();
+                    }
+                    catch {
+                    }
+                    finally {
+                        _transaction = null;
+                        _cancelled = false;
+                    }
+                }
+            }
+
+            private void EnsureSession() {
+                if (_session != null) {
+                    return;
+                }
             }
         }
 

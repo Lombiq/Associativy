@@ -19,6 +19,7 @@ using Orchard.UI.Notify;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.ContentTypes.Controllers {
+    [ValidateInput(false)]
     public class AdminController : Controller, IUpdateModel {
         private readonly IContentDefinitionService _contentDefinitionService;
         private readonly IContentDefinitionManager _contentDefinitionManager;
@@ -51,6 +52,9 @@ namespace Orchard.ContentTypes.Controllers {
         #region Types
 
         public ActionResult List() {
+            if (!Services.Authorizer.Authorize(Permissions.ViewContentTypes, T("Not allowed to view content types.")))
+                return new HttpUnauthorizedResult();
+
             return View("List", new ListContentTypesViewModel {
                 Types = _contentDefinitionService.GetTypes()
             });

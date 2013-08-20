@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Routing;
-using ClaySharp.Implementation;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
@@ -74,6 +73,9 @@ namespace Orchard.ContentTypes.Services {
             itemShape.Metadata.DisplayType = actualDisplayType;
 
             var context = new BuildDisplayContext(itemShape, content, actualDisplayType, String.Empty, _shapeFactory);
+            var workContext = _workContextAccessor.GetContext(_requestContext.HttpContext);
+            context.Layout = workContext.Layout;
+
             BindPlacement(context, actualDisplayType, "Content");
 
             var placementSettings = new List<DriverResultPlacement>();
@@ -212,8 +214,9 @@ namespace Orchard.ContentTypes.Services {
         }
 
         private dynamic CreateItemShape(string actualShapeType) {
-            var zoneHoldingBehavior = new ZoneHoldingBehavior((Func<dynamic>)(() => _shapeFactory.Create("ContentZone", Arguments.Empty())), _workContextAccessor.GetContext().Layout);
-            return _shapeFactory.Create(actualShapeType, Arguments.Empty(), new[] { zoneHoldingBehavior });
+            var zoneHolding = new ZoneHolding(() => _shapeFactory.Create("ContentZone", Arguments.Empty()));
+            zoneHolding.Metadata.Type = actualShapeType;
+            return zoneHolding;
         }
 
         private void BindPlacement(BuildShapeContext context, string displayType, string stereotype) {

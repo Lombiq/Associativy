@@ -5,6 +5,7 @@ using Orchard.Blogs.Models;
 using Orchard.Commands;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
+using Orchard.ContentPicker.Models;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Navigation.Models;
 using Orchard.Security;
@@ -13,7 +14,6 @@ using Orchard.Core.Navigation.Services;
 using Orchard.Settings;
 using Orchard.Core.Title.Models;
 using Orchard.UI.Navigation;
-using Orchard.Utility;
 
 namespace Orchard.Blogs.Commands {
     public class BlogCommands : DefaultOrchardCommandHandler {
@@ -23,6 +23,7 @@ namespace Orchard.Blogs.Commands {
         private readonly IMenuService _menuService;
         private readonly ISiteService _siteService;
         private readonly INavigationManager _navigationManager;
+        private readonly IArchiveService _archiveService;
 
         public BlogCommands(
             IContentManager contentManager,
@@ -30,13 +31,15 @@ namespace Orchard.Blogs.Commands {
             IBlogService blogService,
             IMenuService menuService,
             ISiteService siteService,
-            INavigationManager navigationManager) {
+            INavigationManager navigationManager,
+            IArchiveService archiveService) {
             _contentManager = contentManager;
             _membershipService = membershipService;
             _blogService = blogService;
             _menuService = menuService;
             _siteService = siteService;
             _navigationManager = navigationManager;
+            _archiveService = archiveService;
         }
 
         [OrchardSwitch]
@@ -68,7 +71,7 @@ namespace Orchard.Blogs.Commands {
 
         [CommandName("blog create")]
         [CommandHelp("blog create [/Slug:<slug>] /Title:<title> [/Owner:<username>] [/Description:<description>] [/MenuName:<name>] [/MenuText:<menu text>] [/Homepage:true|false]\r\n\t" + "Creates a new Blog")]
-        [OrchardSwitches("Title,Owner,Description,MenuText,Homepage,MenuName")]
+        [OrchardSwitches("Slug,Title,Owner,Description,MenuText,Homepage,MenuName")]
         public void Create() {
             if (String.IsNullOrEmpty(Owner)) {
                 Owner = _siteService.GetSiteSettings().SuperUser;
@@ -86,18 +89,6 @@ namespace Orchard.Blogs.Commands {
             if (!String.IsNullOrEmpty(Description)) {
                 blog.As<BlogPart>().Description = Description;
             }
-            
-            if ( !String.IsNullOrWhiteSpace(MenuText) ) {
-                var menu = _menuService.GetMenu(MenuName);
-
-                if (menu != null) {
-                    var menuItem = _contentManager.Create<ContentMenuItemPart>("ContentMenuItem");
-                    menuItem.Content = blog;
-                    menuItem.As<MenuPart>().MenuPosition = Position.GetNext(_navigationManager.BuildMenu(menu));
-                    menuItem.As<MenuPart>().MenuText = MenuText;
-                    menuItem.As<MenuPart>().Menu = menu;
-                }
-            }
 
             if (Homepage || !String.IsNullOrWhiteSpace(Slug)) {
                 dynamic dblog = blog;
@@ -108,6 +99,18 @@ namespace Orchard.Blogs.Commands {
             }
             
             _contentManager.Create(blog);
+
+            if (!String.IsNullOrWhiteSpace(MenuText)) {
+                var menu = _menuService.GetMenu(MenuName);
+
+                if (menu != null) {
+                    var menuItem = _contentManager.Create<ContentMenuItemPart>("ContentMenuItem");
+                    menuItem.Content = blog;
+                    menuItem.As<MenuPart>().MenuPosition = _navigationManager.GetNextPosition(menu);
+                    menuItem.As<MenuPart>().MenuText = MenuText;
+                    menuItem.As<MenuPart>().Menu = menu;
+                }
+            }
 
             Context.Output.WriteLine(T("Blog created successfully"));
         }
@@ -158,5 +161,19 @@ namespace Orchard.Blogs.Commands {
             Context.Output.WriteLine(T("Import feed completed."));
         }
 
+        [CommandName("blog build archive")]
+        [CommandHelp("blog build archive /BlogId:<id> \r\n\t" + "Rebuild the archive information for the blog specified by <id>")]
+        [OrchardSwitches("BlogId")]
+        public void BuildArchive() {
+
+            var blog = _blogService.Get(BlogId, VersionOptions.Latest);
+
+            if (blog == null) {
+                Context.Output.WriteLine(T("Blog not found with specified Id: {0}", BlogId));
+                return;
+            }
+
+            _archiveService.RebuildArchive(blog.As<BlogPart>());
+        }
     }
 }

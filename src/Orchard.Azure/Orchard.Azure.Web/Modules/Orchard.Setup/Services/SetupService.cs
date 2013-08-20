@@ -75,7 +75,7 @@ namespace Orchard.Setup.Services {
                     // Core
                     "Common", "Containers", "Contents", "Dashboard", "Feeds", "Navigation", "Reports", "Scheduling", "Settings", "Shapes", "Title",
                     // Modules
-                    "Orchard.Pages", "Orchard.Themes", "Orchard.Users", "Orchard.Roles", "Orchard.Modules", 
+                    "Orchard.Pages", "Orchard.ContentPicker", "Orchard.Themes", "Orchard.Users", "Orchard.Roles", "Orchard.Modules", 
                     "PackagingServices", "Orchard.Packaging", "Gallery", "Orchard.Recipes"
                 };
 
@@ -115,7 +115,7 @@ namespace Orchard.Setup.Services {
                     // check if the database is already created (in case an exception occured in the second phase)
                     var schemaBuilder = new SchemaBuilder(environment.Resolve<IDataMigrationInterpreter>());
                     try {
-                        var tablePrefix = String.IsNullOrEmpty(_shellSettings.DataTablePrefix) ? "" : _shellSettings.DataTablePrefix + "_";
+                        var tablePrefix = String.IsNullOrEmpty(shellSettings.DataTablePrefix) ? "" : shellSettings.DataTablePrefix + "_";
                         schemaBuilder.ExecuteSql("SELECT * FROM " + tablePrefix + "Settings_ShellDescriptorRecord");
                     }
                     catch {
@@ -155,7 +155,7 @@ namespace Orchard.Setup.Services {
             // components will exist entirely in isolation - no crossover between the safemode container currently in effect
 
             // must mark state as Running - otherwise standalone enviro is created "for setup"
-            shellSettings.State = new TenantState("Running");
+            shellSettings.State = TenantState.Running;
             using (var environment = _orchardHost.CreateStandaloneEnvironment(shellSettings)) {
                 try {
                     executionId = CreateTenantData(context, environment);

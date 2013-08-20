@@ -1,6 +1,7 @@
 ﻿@using Orchard.ContentManagement;
-@using Orchard.Core.Contents
+@using Orchard.Core.Contents;
 @using Orchard.Utility.Extensions;
+
 @{
     Script.Require("ShapesBase");
     ContentPart contentPart = Model.ContentPart;
@@ -10,10 +11,10 @@
     @T(" | ")
 
     if (contentPart.HasDraft()) {
-        @Html.Link(T("Publish Draft").Text, Url.Action("Publish", "Admin", new { area = "Contents", id = contentPart.ContentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" })
-        @T(" | ")
-
         if (Authorizer.Authorize(Permissions.PublishContent, contentPart)) {
+            @Html.Link(T("Publish Draft").Text, Url.Action("Publish", "Admin", new { area = "Contents", id = contentPart.ContentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" })
+            @T(" | ")
+        
             @Html.ActionLink(T("Preview").Text, "Preview", "Item", new {area = "Contents", id = ((ContentItem) Model.ContentPart.ContentItem).Id}, new {})
             @T(" | ")
         }

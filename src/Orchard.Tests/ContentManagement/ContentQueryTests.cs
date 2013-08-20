@@ -3,6 +3,7 @@ using Autofac;
 using Moq;
 using NHibernate;
 using NUnit.Framework;
+using Orchard.Caching;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Data;
 using Orchard.ContentManagement;
@@ -10,6 +11,7 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.Records;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
+using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Tests.ContentManagement.Handlers;
 using Orchard.Tests.ContentManagement.Records;
@@ -47,9 +49,12 @@ namespace Orchard.Tests.ContentManagement {
 
             builder.RegisterModule(new ContentModule());
             builder.RegisterType<DefaultContentManager>().As<IContentManager>().SingleInstance();
+            builder.RegisterType<Signals>().As<ISignals>();
+            builder.RegisterType<StubCacheManager>().As<ICacheManager>();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterInstance(new Mock<IContentDefinitionManager>().Object);
             builder.RegisterInstance(new Mock<IContentDisplay>().Object);
+            builder.RegisterInstance(new ShellSettings { Name = ShellSettings.DefaultName, DataProvider = "SqlCe" });
 
             builder.RegisterType<AlphaPartHandler>().As<IContentHandler>();
             builder.RegisterType<BetaPartHandler>().As<IContentHandler>();

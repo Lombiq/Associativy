@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Orchard.ContentManagement.Records;
+using Orchard.Data.Conventions;
 
 namespace Orchard.Projections.Models {
     public class ProjectionPartRecord : ContentPartRecord {
@@ -41,11 +42,13 @@ namespace Orchard.Projections.Models {
         /// <summary>
         /// The query to execute
         /// </summary>
+        [Aggregate]
         public virtual QueryPartRecord QueryPartRecord { get; set; }
 
         /// <summary>
         /// The layout to render
         /// </summary>
+        [Aggregate]
         public virtual LayoutRecord LayoutRecord { get; set; }
 
     }

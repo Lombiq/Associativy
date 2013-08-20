@@ -41,8 +41,13 @@ namespace Orchard.Core.Navigation.Drivers {
                 return "MenuWidget";
             }
         }
+
         protected override DriverResult Display(MenuWidgetPart part, string displayType, dynamic shapeHelper) {
             return ContentShape( "Parts_MenuWidget", () => {
+                if(part.Menu == null) {
+                    return null;
+                }
+
                 var menu = _menuService.GetMenu(part.Menu.Id);
 
                 if(menu == null) {
@@ -51,9 +56,7 @@ namespace Orchard.Core.Navigation.Drivers {
 
                 var menuName = menu.As<TitlePart>().Title.HtmlClassify();
                 var currentCulture = _workContextAccessor.GetContext().CurrentCulture;
-
-                IEnumerable<MenuItem> menuItems = _navigationManager.BuildMenu(menu);
-
+                var menuItems = _navigationManager.BuildMenu(menu);
                 var localized = new List<MenuItem>();
                 foreach(var menuItem in menuItems) {
                     // if there is no associated content, it as culture neutral
@@ -62,26 +65,25 @@ namespace Orchard.Core.Navigation.Drivers {
                     }
 
                     // if the menu item is culture neutral or of the current culture
-                    if (String.IsNullOrEmpty(menuItem.Culture) || String.Equals(menuItem.Culture, currentCulture, StringComparison.OrdinalIgnoreCase)) {
+                    else if (String.IsNullOrEmpty(menuItem.Culture) || String.Equals(menuItem.Culture, currentCulture, StringComparison.OrdinalIgnoreCase)) {
                         localized.Add(menuItem);
                     }
                 }
 
                 menuItems = localized;
 
-                var routeData = _workContextAccessor.GetContext().HttpContext.Request.RequestContext.RouteData;
-
-                var selectedPath = NavigationHelper.SetSelectedPath(menuItems, routeData);
-                                             
-                dynamic menuShape = shapeHelper.Menu();
+                var request = _workContextAccessor.GetContext().HttpContext.Request;
+                var routeData = request.RequestContext.RouteData;
+                var selectedPath = NavigationHelper.SetSelectedPath(menuItems, request, routeData);                            
+                var menuShape = shapeHelper.Menu();
 
                 if (part.Breadcrumb) {
-                    menuItems = selectedPath;
+                    menuItems = selectedPath ?? new Stack<MenuItem>();
                     foreach (var menuItem in menuItems) {
                         menuItem.Items = Enumerable.Empty<MenuItem>();
                     }
 
-                    // apply level limites to breadcrumb
+                    // apply level limits to breadcrumb
                     menuItems = menuItems.Skip(part.StartLevel - 1);
                     if (part.Levels > 0) {
                         menuItems = menuItems.Take(part.Levels);
@@ -108,49 +110,46 @@ namespace Orchard.Core.Navigation.Drivers {
                     }
 
                     menuItems = result;
-
                     menuShape = shapeHelper.Breadcrumb();
                 }
                 else {
-                    IEnumerable<MenuItem> topLevelItems = menuItems.ToList();
-                    
-                    if(part.StartLevel > 1) {
-                        topLevelItems = selectedPath.Where(x => x.Selected);
-                    }
+                    var topLevelItems = menuItems.ToList();
 
-                    if (topLevelItems.Any()) {
-                        // apply start level by pushing childrens as top level items
-                        int i = 0;
-                        for (; i < part.StartLevel - 1; i++) {
-                            var temp = new List<MenuItem>();
+                    // apply start level by pushing children as top level items. When the start level is
+                    // greater than 1 (ie. below the top level), only menu items along the selected path
+                    // will be displayed.
+                    for (var i = 0; topLevelItems.Any() && i < part.StartLevel - 1; i++) {
+                        var temp = new List<MenuItem>();
+                        if (selectedPath != null) {
+                            topLevelItems = topLevelItems.Intersect(selectedPath.Where(x => x.Selected)).ToList();
                             foreach (var menuItem in topLevelItems) {
                                 temp.AddRange(menuItem.Items);
                             }
-                            topLevelItems = temp;
                         }
-
-                        // apply display level
-                        if(part.Levels > 0) {
-                            var current = topLevelItems.ToList();
-                            for (; i < part.Levels - part.StartLevel; i++ ) {
-                                var temp = new List<MenuItem>();
-                                foreach (var menuItem in current) {
-                                    temp.AddRange(menuItem.Items);
-                                }
-                                current = temp;
-                            }
-                            foreach(var menuItem in current) {
-                                menuItem.Items = Enumerable.Empty<MenuItem>();
-                            }
-                        }
-
-                        menuItems = topLevelItems;
+                        topLevelItems = temp;                        
                     }
+
+                    // limit the number of levels to display (down from and including the start level)
+                    if(part.Levels > 0) {
+                        var current = topLevelItems.ToList();
+                        for (var i = 1; current.Any() && i < part.Levels; i++ ) {
+                            var temp = new List<MenuItem>();
+                            foreach (var menuItem in current) {
+                                temp.AddRange(menuItem.Items);
+                            }
+                            current = temp;
+                        }
+                        // cut the sub-levels beneath any menu items that are at the lowest level being displayed
+                        foreach (var menuItem in current) {
+                            menuItem.Items = Enumerable.Empty<MenuItem>();
+                        }                
+                    }
+                    menuItems = topLevelItems;
                 }
 
-                
-
                 menuShape.MenuName(menuName);
+                menuShape.ContentItem(menu);
+
                 NavigationHelper.PopulateMenu(shapeHelper, menuShape, menuShape, menuItems);
 
                 return shapeHelper.Parts_MenuWidget(Menu: menuShape);
@@ -192,6 +191,8 @@ namespace Orchard.Core.Navigation.Drivers {
             context.ImportAttribute(part.PartDefinition.Name, "StartLevel", x => part.StartLevel = Convert.ToInt32(x));
             context.ImportAttribute(part.PartDefinition.Name, "Levels", x => part.Levels = Convert.ToInt32(x));
             context.ImportAttribute(part.PartDefinition.Name, "Breadcrumb", x => part.Breadcrumb = Convert.ToBoolean(x));
+            context.ImportAttribute(part.PartDefinition.Name, "AddCurrentPage", x => part.AddCurrentPage = Convert.ToBoolean(x));
+            context.ImportAttribute(part.PartDefinition.Name, "AddHomePage", x => part.AddHomePage = Convert.ToBoolean(x));
 
             context.ImportAttribute(part.PartDefinition.Name, "Menu", x => part.Menu = context.GetItemFromSession(x).Record);
         }
@@ -203,6 +204,8 @@ namespace Orchard.Core.Navigation.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("StartLevel", part.StartLevel);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Levels", part.Levels);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Breadcrumb", part.Breadcrumb);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("AddCurrentPage", part.AddCurrentPage);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("AddHomePage", part.AddHomePage);
         }
 
     }

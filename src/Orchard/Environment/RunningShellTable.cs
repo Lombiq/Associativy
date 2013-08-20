@@ -60,7 +60,8 @@ namespace Orchard.Environment {
                     s.RequestUrlHost.Split(new [] {','}, StringSplitOptions.RemoveEmptyEntries)
                      .Select(h => new ShellSettings(s) {RequestUrlHost = h}))
                 .GroupBy(s => s.RequestUrlHost ?? string.Empty)
-                .OrderByDescending(g => g.Key.Length);
+                .OrderByDescending(g => g.Key.Length)
+                .ToArray();
 
             if (unqualified.Count() == 1) {
                 // only one shell had no request url criteria
@@ -85,6 +86,11 @@ namespace Orchard.Environment {
         }
 
         public ShellSettings Match(string host, string appRelativePath) {
+            // optimized path when only one tenant (Default)
+            if (!_shellsByHost.Any()) {
+                return _fallback;
+            }
+
             var hostLength = host.IndexOf(':');
             if (hostLength != -1)
                 host = host.Substring(0, hostLength);
@@ -94,7 +100,7 @@ namespace Orchard.Environment {
                 .SelectMany(group => group
                     .OrderByDescending(settings => (settings.RequestUrlPrefix ?? string.Empty).Length))
                     .FirstOrDefault(settings => {
-                        if (settings.State.CurrentState == TenantState.State.Disabled) {
+                        if (settings.State == TenantState.Disabled) {
                             return false;
                         }
 

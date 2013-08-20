@@ -5,51 +5,161 @@ using JetBrains.Annotations;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Services;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.Handlers;
-using Orchard.Core.Common.Models;
 using Orchard.Data;
 
 namespace Orchard.Blogs.Handlers {
     [UsedImplicitly]
     public class BlogPartArchiveHandler : ContentHandler {
-        public BlogPartArchiveHandler(IRepository<BlogPartArchiveRecord> blogArchiveRepository, IBlogPostService blogPostService) {
-            OnPublished<BlogPostPart>((context, bp) => RecalculateBlogArchive(blogArchiveRepository, blogPostService, bp));
-            OnUnpublished<BlogPostPart>((context, bp) => RecalculateBlogArchive(blogArchiveRepository, blogPostService, bp));
-            OnRemoved<BlogPostPart>((context, bp) => RecalculateBlogArchive(blogArchiveRepository, blogPostService, bp));
+        private readonly IRepository<BlogPartArchiveRecord> _blogArchiveRepository;
+        private readonly IWorkContextAccessor _workContextAccessor;
+        private readonly IContentManager _contentManager;
+        // contains the creation time of a blog part before it has been changed
+        private readonly Dictionary<int, DateTime> _previousCreatedUtc = new Dictionary<int,DateTime>();
+
+        public BlogPartArchiveHandler(
+            IRepository<BlogPartArchiveRecord> blogArchiveRepository, 
+            IBlogPostService blogPostService,
+            IWorkContextAccessor workContextAccessor,
+            IContentManager contentManager) {
+            _blogArchiveRepository = blogArchiveRepository;
+            _workContextAccessor = workContextAccessor;
+            _contentManager = contentManager;
+
+            //OnVersioning<BlogPostPart>((context, bp1, bp2) => {
+            //    var commonPart = bp1.As<ICommonPart>();
+            //    if (commonPart == null || !commonPart.CreatedUtc.HasValue)
+            //        return;
+
+            //    if (context.BuildingItemVersionRecord.Published == context.ExistingContentItem.IsPublished()) {
+            //        return;
+            //    }
+
+            //    var previousPublishedVersion = contentManager.Get(commonPart.Id, VersionOptions.Published);
+
+            //    // retrieve the creation date when it was published
+            //    if (previousPublishedVersion != null) {
+            //        var versionCommonPart = previousPublishedVersion.As<ICommonPart>();
+            //        if (versionCommonPart.VersionCreatedUtc.HasValue) {
+            //            _previousCreatedUtc[commonPart.Id] = versionCommonPart.VersionCreatedUtc.Value;
+            //        }
+            //    }
+
+            //});
+
+            //OnUpdating<BlogPostPart>((context, bp) => SavePreviousPublishDate(context.Id));
+            OnPublishing<BlogPostPart>((context, bp) => SavePreviousPublishDate(context.Id));
+            OnRemoving<BlogPostPart>((context, bp) => SavePreviousPublishDate(context.Id));
+            OnUnpublishing<BlogPostPart>((context, bp) => SavePreviousPublishDate(context.Id));
+
+            OnPublished<BlogPostPart>((context, bp) => IncreaseBlogArchive(bp));
+            OnUnpublished<BlogPostPart>((context, bp) => ReduceBlogArchive(bp));
+            OnRemoved<BlogPostPart>((context, bp) => ReduceBlogArchive(bp));
         }
 
-        private static void RecalculateBlogArchive(IRepository<BlogPartArchiveRecord> blogArchiveRepository, IBlogPostService blogPostService, BlogPostPart blogPostPart) {
-            blogArchiveRepository.Flush();
-
-            // remove all current blog archive records
-            var blogArchiveRecords =
-                from bar in blogArchiveRepository.Table
-                where bar.BlogPart == blogPostPart.BlogPart.Record
-                select bar;
-            blogArchiveRecords.ToList().ForEach(blogArchiveRepository.Delete);
-
-            // get all blog posts for the current blog
-            var posts = blogPostService.Get(blogPostPart.BlogPart, VersionOptions.Published);
-
-            // create a dictionary of all the year/month combinations and their count of posts that are published in this blog
-            var inMemoryBlogArchives = new Dictionary<DateTime, int>();
-            foreach (var post in posts) {
-                if (!post.Has<CommonPart>())
-                    continue;
-
-                var commonPart = post.As<CommonPart>();
-                var key = new DateTime(commonPart.CreatedUtc.Value.Year, commonPart.CreatedUtc.Value.Month, 1);
-
-                if (inMemoryBlogArchives.ContainsKey(key))
-                    inMemoryBlogArchives[key]++;
-                else
-                    inMemoryBlogArchives[key] = 1;
+        private void SavePreviousPublishDate(int contentItemId) {
+            if (_previousCreatedUtc.ContainsKey(contentItemId)) {
+                return;
             }
 
-            // create the new blog archive records based on the in memory values
-            foreach (KeyValuePair<DateTime, int> item in inMemoryBlogArchives) {
-                blogArchiveRepository.Create(new BlogPartArchiveRecord {BlogPart = blogPostPart.BlogPart.Record, Year = item.Key.Year, Month = item.Key.Month, PostCount = item.Value});
+            var previousPublishedVersion = _contentManager.Get(contentItemId, VersionOptions.Published);
+
+            // retrieve the creation date when it was published
+            if (previousPublishedVersion != null) {
+                var versionCommonPart = previousPublishedVersion.As<ICommonPart>();
+                if (versionCommonPart.VersionCreatedUtc.HasValue) {
+                    _previousCreatedUtc[contentItemId] = versionCommonPart.VersionCreatedUtc.Value;
+                }
             }
+        }
+
+        private void ReduceBlogArchive(BlogPostPart blogPostPart) {
+            _blogArchiveRepository.Flush();
+
+            // don't reduce archive count if the content item is not published
+            if (!blogPostPart.HasPublished) {
+                return;
+            }
+
+            var commonPart = blogPostPart.As<ICommonPart>();
+            if (commonPart == null || !commonPart.CreatedUtc.HasValue)
+                return;
+
+            var timeZone = _workContextAccessor.GetContext().CurrentTimeZone;
+            var datetime = TimeZoneInfo.ConvertTimeFromUtc(commonPart.CreatedUtc.Value, timeZone);
+
+            var previousArchiveRecord = _blogArchiveRepository.Table
+                .FirstOrDefault(x => x.BlogPart == blogPostPart.BlogPart.Record
+                                    && x.Month == datetime.Month
+                                    && x.Year == datetime.Year);
+
+            if(previousArchiveRecord == null)
+                return;
+
+            if (previousArchiveRecord.PostCount > 1)
+                previousArchiveRecord.PostCount--;
+            else
+                _blogArchiveRepository.Delete(previousArchiveRecord);
+        }
+
+        private void IncreaseBlogArchive(BlogPostPart blogPostPart) {
+            _blogArchiveRepository.Flush();
+            
+            var commonPart = blogPostPart.As<ICommonPart>();
+            if(commonPart == null || !commonPart.CreatedUtc.HasValue)
+                return;
+
+            // get the time zone for the current request
+            var timeZone = _workContextAccessor.GetContext().CurrentTimeZone;
+
+            var previousCreatedUtc = _previousCreatedUtc.ContainsKey(blogPostPart.Id) ? _previousCreatedUtc[blogPostPart.Id] : DateTime.MinValue;
+            previousCreatedUtc = TimeZoneInfo.ConvertTimeFromUtc(previousCreatedUtc, timeZone);
+
+            var previousMonth = previousCreatedUtc.Month;
+            var previousYear = previousCreatedUtc.Year;
+
+            var newCreatedUtc = commonPart.CreatedUtc;
+            newCreatedUtc = TimeZoneInfo.ConvertTimeFromUtc(newCreatedUtc.Value, timeZone);
+
+            var newMonth = newCreatedUtc.Value.Month;
+            var newYear = newCreatedUtc.Value.Year;
+
+            // if archives are the same there is nothing to do
+            if (previousMonth == newMonth && previousYear == newYear) {
+                return;
+            }
+            
+            // decrement previous archive record
+            var previousArchiveRecord = _blogArchiveRepository
+                .Table
+                .FirstOrDefault(x => x.BlogPart == blogPostPart.BlogPart.Record
+                                     && x.Month == previousMonth
+                                     && x.Year == previousYear);
+
+            if (previousArchiveRecord != null && previousArchiveRecord.PostCount > 0) {
+                previousArchiveRecord.PostCount--;
+            }
+
+            // if previous count is now zero, delete the record
+            if (previousArchiveRecord != null && previousArchiveRecord.PostCount == 0) {
+                _blogArchiveRepository.Delete(previousArchiveRecord);
+            }
+            
+            // increment new archive record
+            var newArchiveRecord = _blogArchiveRepository
+                .Table
+                .FirstOrDefault(x => x.BlogPart == blogPostPart.BlogPart.Record
+                                     && x.Month == newMonth
+                                     && x.Year == newYear);
+
+            // if record can't be found create it
+            if (newArchiveRecord == null) {
+                newArchiveRecord = new BlogPartArchiveRecord { BlogPart = blogPostPart.BlogPart.Record, Year = newYear, Month = newMonth, PostCount = 0 };
+                _blogArchiveRepository.Create(newArchiveRecord);
+            }
+
+            newArchiveRecord.PostCount++;            
         }
     }
 }

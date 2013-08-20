@@ -101,13 +101,25 @@ namespace Orchard.Core.Shapes {
             builder.Describe("MenuItemLink")
                 .OnDisplaying(displaying => {
                     var menuItem = displaying.Shape;
-                    var menu = menuItem.Menu;
-                    menuItem.Metadata.Alternates.Add("MenuItemLink__" + EncodeAlternateElement(menu.MenuName));
-
-                    var contentType = ((IContent)menuItem.Content).ContentItem.ContentType;
-                    if(contentType != null) {
-                        menuItem.Metadata.Alternates.Add("MenuItemLink__" + contentType);
+                    string menuName = menuItem.Menu.MenuName;
+                    string contentType = null;
+                    if (menuItem.Content != null) {
+                        contentType = ((IContent) menuItem.Content).ContentItem.ContentType;
                     }
+
+                    // MenuItemLink__[ContentType] e.g. MenuItemLink-HtmlMenuItem
+                    if (contentType != null) {
+                        menuItem.Metadata.Alternates.Add("MenuItemLink__" + EncodeAlternateElement(contentType));
+                    }
+
+                    // MenuItemLink__[MenuName] e.g. MenuItemLink-Main-Menu
+                    menuItem.Metadata.Alternates.Add("MenuItemLink__" + EncodeAlternateElement(menuName));
+
+                    // MenuItemLink__[MenuName]__[ContentType] e.g. MenuItemLink-Main-Menu-HtmlMenuItem
+                    if (contentType != null) {
+                        menuItem.Metadata.Alternates.Add("MenuItemLink__" + EncodeAlternateElement(menuName) + "__" + EncodeAlternateElement(contentType));
+                    }
+                    
                 });
 
             builder.Describe("LocalMenu")
@@ -704,14 +716,14 @@ namespace Orchard.Core.Shapes {
                 Output.Write(itemOutput);
 
                 if (itemTag != null) {
-                    Output.Write(itemTag.ToString(TagRenderMode.EndTag));
+                    Output.WriteLine(itemTag.ToString(TagRenderMode.EndTag));
                 }
 
                 ++index;
             }
 
             if (listTag != null) {
-                Output.Write(listTag.ToString(TagRenderMode.EndTag));
+                Output.WriteLine(listTag.ToString(TagRenderMode.EndTag));
             }
         }
 
