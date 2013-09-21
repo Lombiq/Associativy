@@ -61,10 +61,10 @@ namespace Orchard.MediaProcessing.Providers.Filters {
 
             if (!String.IsNullOrWhiteSpace(padcolor)) {
                 if (padcolor.StartsWith("#")) {
-                    ColorTranslator.FromHtml(padcolor);
+                    settings.BackgroundColor = ColorTranslator.FromHtml(padcolor);
                 }
                 else {
-                    settings.PaddingColor = Color.FromName(padcolor);
+                    settings.BackgroundColor = Color.FromName(padcolor);
                 }
             }
 
@@ -109,17 +109,17 @@ namespace Orchard.MediaProcessing.Providers.Filters {
                             Title: T("Width"),
                             Value: 0,
                             Description: T("The width in pixels."),
-                            Classes: new[] {"text-small"}),
+                            Classes: new[] {"text small"}),
                         _Height: Shape.Textbox(
                             Id: "height", Name: "Height",
                             Title: T("Height"),
                             Value: 0,
                             Description: T("The height in pixels."),
-                            Classes: new[] {"text-small"}),
+                            Classes: new[] {"text small"}),
                         _Mode: Shape.SelectList(
                             Id: "mode", Name: "Mode",
                             Title: T("Mode"),
-                            Description: T("How the image should be resized.<br/>Max: adjusts to the max given width or left, keeping image ratio.<br/>Pad: adds a padding so that the target image is exactly of width and height.<br/>Crop: removes part of the image to fit with given height and width.<br/>Stretch: stretches the image to fit within height and width."),
+                            Description: T("How the image should be resized.<br />Max: adjusts to the max given width or height, keeping image ratio.<br />Pad: adds a padding so that the target image is exactly of width and height.<br />Crop: removes part of the image to fit with given height and width.<br />Stretch: stretches the image to fit within height and width."),
                             Size: 1,
                             Multiple: false),
                         _Alignment: Shape.SelectList(
@@ -133,7 +133,7 @@ namespace Orchard.MediaProcessing.Providers.Filters {
                             Title: T("Pad Color"),
                             Value: "#ffffff",
                             Description: T("The background color to use to pad the image. Named color or hex value."),
-                            Classes: new[] {"text-small"})
+                            Classes: new[] {"text small"})
                         );
 
                     f._Mode.Add(new SelectListItem { Value = "max", Text = T("Max").Text });
