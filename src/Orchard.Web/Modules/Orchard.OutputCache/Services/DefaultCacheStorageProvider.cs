@@ -5,6 +5,7 @@ using System.Linq;
 using Orchard.OutputCache.Models;
 using Orchard;
 using Orchard.Environment.Configuration;
+using Orchard.Services;
 
 namespace Orchard.OutputCache.Services {
     public class DefaultCacheStorageProvider : IOutputCacheStorageProvider {
@@ -21,8 +22,8 @@ namespace Orchard.OutputCache.Services {
                 key,
                 cacheItem,
                 null,
-                System.Web.Caching.Cache.NoAbsoluteExpiration,
-                new TimeSpan(0, 0, cacheItem.ValidFor),
+                cacheItem.ValidUntilUtc,
+                System.Web.Caching.Cache.NoSlidingExpiration,
                 System.Web.Caching.CacheItemPriority.Normal,
                 null);
         }
@@ -37,6 +38,7 @@ namespace Orchard.OutputCache.Services {
                 foreach (var item in items) {
                     Remove(item.CacheKey);
                 }
+                items = GetCacheItems(0, 100).ToList();
             }
         }
 

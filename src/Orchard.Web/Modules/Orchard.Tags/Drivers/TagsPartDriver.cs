@@ -14,7 +14,7 @@ using Orchard.UI.Notify;
 namespace Orchard.Tags.Drivers {
     [UsedImplicitly]
     public class TagsPartDriver : ContentPartDriver<TagsPart> {
-        private static readonly char[] _disalowedChars = new [] { '<', '>', '*', '%', ':', '&', '\\', '"', '|' };
+        private static readonly char[] _disalowedChars =  { '<', '>', '*', '%', ':', '&', '\\', '"', '|' };
         private const string TemplateName = "Parts/Tags";
         private readonly ITagService _tagService;
         private readonly INotifier _notifier;
@@ -33,7 +33,7 @@ namespace Orchard.Tags.Drivers {
 
         protected override DriverResult Display(TagsPart part, string displayType, dynamic shapeHelper) {
             return ContentShape("Parts_Tags_ShowTags",
-                            () => shapeHelper.Parts_Tags_ShowTags(Tags: part.CurrentTags));
+                            () => shapeHelper.Parts_Tags_ShowTags(Tags: part.CurrentTags.Select(x => new ShowTagViewModel { TagName = x })));
         }
 
         protected override DriverResult Editor(TagsPart part, dynamic shapeHelper) {
@@ -67,7 +67,7 @@ namespace Orchard.Tags.Drivers {
 
         private static EditTagsViewModel BuildEditorViewModel(TagsPart part) {
             return new EditTagsViewModel {
-                Tags = string.Join(", ", part.CurrentTags.Select((t, i) => t.TagName).ToArray())
+                Tags = string.Join(", ", part.CurrentTags)
             };
         }
 
@@ -77,14 +77,14 @@ namespace Orchard.Tags.Drivers {
                 var tags = tagString.Split(new[] {","}, StringSplitOptions.RemoveEmptyEntries);
                 // Merge tags.
                 if (tags.Length > 0) {
-                    var currentTags = part.CurrentTags.Select(t => t.TagName);
+                    var currentTags = part.CurrentTags;
                     _tagService.UpdateTagsForContentItem(context.ContentItem, tags.Concat(currentTags).Distinct()); 
                 }
             }
         }
 
         protected override void Exporting(TagsPart part, ExportContentContext context) {
-            context.Element(part.PartDefinition.Name).SetAttributeValue("Tags", String.Join(",", part.CurrentTags.Select(t => t.TagName)));
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Tags", String.Join(",", part.CurrentTags));
         }
     }
 }

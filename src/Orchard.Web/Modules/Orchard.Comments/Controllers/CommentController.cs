@@ -30,24 +30,24 @@ namespace Orchard.Comments.Controllers {
                 return this.RedirectLocal(returnUrl, "~/");
 
             var comment = Services.ContentManager.New<CommentPart>("Comment");
-            Services.ContentManager.Create(comment);
+            Services.ContentManager.Create(comment, VersionOptions.Draft);
             
             var editorShape = Services.ContentManager.UpdateEditor(comment, this);
 
 
-            if (!ModelState.IsValidField("Author")) {
+            if (!ModelState.IsValidField("Comments.Author")) {
                 Services.Notifier.Error(T("Name is mandatory and must have less than 255 chars"));
             }
 
-            if (!ModelState.IsValidField("Email")) {
+            if (!ModelState.IsValidField("Comments.Email")) {
                 Services.Notifier.Error(T("Email is invalid or is longer than 255 chars"));
             }
 
-            if (!ModelState.IsValidField("Site")) {
+            if (!ModelState.IsValidField("Comments.Site")) {
                 Services.Notifier.Error(T("Site url is invalid or is longer than 255 chars"));
             }
 
-            if (!ModelState.IsValidField("CommentText")) {
+            if (!ModelState.IsValidField("Comments.CommentText")) {
                 Services.Notifier.Error(T("Comment is mandatory"));
             }
 
