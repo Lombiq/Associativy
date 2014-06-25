@@ -110,7 +110,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Styles\Web.config">
-      <SubType>Designer</SubType>
+      <SubType>
+      </SubType>
     </Content>
   </ItemGroup>
   <ItemGroup>
@@ -118,7 +119,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\Web.config">
-      <SubType>Designer</SubType>
+      <SubType>
+      </SubType>
     </Content>
   </ItemGroup>
   <PropertyGroup>

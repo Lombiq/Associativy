@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Web;
 using Orchard.Azure.Services.Environment.Configuration;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
@@ -10,16 +11,22 @@ namespace Orchard.Azure.Services.FileSystems.Media {
     [OrchardSuppressDependency("Orchard.FileSystems.Media.FileSystemStorageProvider")]
     public class AzureBlobStorageProvider : AzureFileSystem, IStorageProvider {
 
-        public AzureBlobStorageProvider(ShellSettings shellSettings, IMimeTypeProvider mimeTypeProvider)
-            : this(PlatformConfiguration.GetSetting(Constants.MediaStorageStorageConnectionStringSettingName, shellSettings.Name), Constants.MediaStorageContainerName, shellSettings.Name, mimeTypeProvider) {
+        public AzureBlobStorageProvider(ShellSettings shellSettings, IMimeTypeProvider mimeTypeProvider, IPlatformConfigurationAccessor pca)
+            : this(pca.GetSetting(Constants.MediaStorageStorageConnectionStringSettingName, shellSettings.Name, null),
+                   Constants.MediaStorageContainerName, shellSettings.Name, mimeTypeProvider,
+                   pca.GetSetting(Constants.MediaStoragePublicHostName, shellSettings.Name, null)) {
         }
 
-        public AzureBlobStorageProvider(string storageConnectionString, string containerName, string rootFolderPath, IMimeTypeProvider mimeTypeProvider)
-            : base(storageConnectionString, containerName, rootFolderPath, false, mimeTypeProvider) {
+        public AzureBlobStorageProvider(string storageConnectionString, string containerName, string rootFolderPath, IMimeTypeProvider mimeTypeProvider, string publicHostName)
+            : base(storageConnectionString, containerName, rootFolderPath, false, mimeTypeProvider, publicHostName) {
         }
 
         public bool TrySaveStream(string path, Stream inputStream) {
             try {
+                if (FileExists(path)) {
+                    return false;
+                }
+
                 SaveStream(path, inputStream);
             }
             catch {
@@ -51,7 +58,7 @@ namespace Orchard.Azure.Services.FileSystems.Media {
         /// <returns>The corresponding local path.</returns>
         public string GetStoragePath(string url) {
             if (url.StartsWith(_absoluteRoot)) {
-                return url.Substring(Combine(_absoluteRoot, "/").Length);
+                return HttpUtility.UrlDecode(url.Substring(Combine(_absoluteRoot, "/").Length));
             }
 
             return null;

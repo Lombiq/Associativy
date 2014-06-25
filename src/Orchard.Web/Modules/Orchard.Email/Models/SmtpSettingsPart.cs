@@ -1,4 +1,8 @@
-﻿using Orchard.ContentManagement;
+﻿using System.ComponentModel;
+using System.Configuration;
+using System.Net.Configuration;
+using System.Net.Mail;
+using Orchard.ContentManagement;
 using System;
 using Orchard.ContentManagement.Utilities;
 
@@ -14,6 +18,10 @@ namespace Orchard.Email.Models {
             get { return this.Retrieve(x => x.Address); }
             set { this.Store(x => x.Address, value); }
         }
+
+        private readonly LazyField<string> _addressPlaceholder = new LazyField<string>();
+        internal LazyField<string> AddressPlaceholderField { get { return _addressPlaceholder; } }
+        public string AddressPlaceholder { get { return _addressPlaceholder.Value; } }
 
         public string Host {
             get { return this.Retrieve(x => x.Host); }
@@ -41,14 +49,25 @@ namespace Orchard.Email.Models {
         }
 
         public string Password {
-            get { return this.Retrieve(x => x.Password); }
-            set { this.Store(x => x.Password, value); }
+            get { return _password.Value; }
+            set { _password.Value = value; }
         }
 
         public bool IsValid() {
-            return !String.IsNullOrWhiteSpace(Host)
-                && Port > 0
-                && !String.IsNullOrWhiteSpace(Address);
+            var section = (SmtpSection)ConfigurationManager.GetSection("system.net/mailSettings/smtp");
+            if (section != null && !String.IsNullOrWhiteSpace(section.Network.Host)) {
+                return true;
+            }
+
+            if (String.IsNullOrWhiteSpace(Address)) {
+                return false;
+            }
+
+            if (!String.IsNullOrWhiteSpace(Host) && Port == 0) {
+                return false;
+            }
+
+            return true;
         }
     }
 }
