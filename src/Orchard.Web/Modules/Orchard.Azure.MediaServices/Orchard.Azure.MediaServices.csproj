@@ -290,6 +290,39 @@
     <None Include="Scripts\cloudmedia-videoplayer-injectors-smp.ts" />
     <None Include="Scripts\cloudmedia-videoplayer-injectors.ts" />
     <None Include="Scripts\cloudmedia-videoplayer-main.ts" />
+    <Content Include="Styles\cloudmedia-admin-asset.css.map">
+      <DependentUpon>cloudmedia-admin-asset.css</DependentUpon>
+    </Content>
+    <Content Include="Styles\cloudmedia-admin-job.css.map">
+      <DependentUpon>cloudmedia-admin-job.css</DependentUpon>
+    </Content>
+    <Content Include="Styles\cloudmedia-admin-settings.css.map">
+      <DependentUpon>cloudmedia-admin-settings.css</DependentUpon>
+    </Content>
+    <Content Include="Styles\cloudmedia-edit-assets.css.map">
+      <DependentUpon>cloudmedia-edit-assets.css</DependentUpon>
+    </Content>
+    <Content Include="Styles\cloudmedia-edit-cloudvideopart.css.map">
+      <DependentUpon>cloudmedia-edit-cloudvideopart.css</DependentUpon>
+    </Content>
+    <Content Include="Styles\cloudmedia-edit-jobs.css.map">
+      <DependentUpon>cloudmedia-edit-jobs.css</DependentUpon>
+    </Content>
+    <Content Include="Styles\cloudmedia-progress.css.map">
+      <DependentUpon>cloudmedia-progress.css</DependentUpon>
+    </Content>
+    <Content Include="Styles\cloudmedia-videoplayer.css.map">
+      <DependentUpon>cloudmedia-videoplayer.css</DependentUpon>
+    </Content>
+    <Content Include="Styles\menu.cloudmedia-mediaproviders.css.map">
+      <DependentUpon>menu.cloudmedia-mediaproviders.css</DependentUpon>
+    </Content>
+    <Content Include="Styles\cloudmedia-tabs.css.map">
+      <DependentUpon>cloudmedia-tabs.css</DependentUpon>
+    </Content>
+    <Content Include="Styles\cloudmedia-admin-selecttask.css.map">
+      <DependentUpon>cloudmedia-admin-selecttask.css</DependentUpon>
+    </Content>
     <TypeScriptCompile Include="Scripts\typings\moment.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\underscore.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\uri.d.ts" />
