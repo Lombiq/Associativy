@@ -1,4 +1,4 @@
-﻿@model Orchard.MultiTenancy.ViewModels.TenantAddViewModel
+@model Orchard.MultiTenancy.ViewModels.TenantAddViewModel
 
 @{ Layout.Title = T("Add New Tenant").ToString(); }
 
@@ -8,17 +8,17 @@
         <div>
             <label for="@Html.FieldIdFor(m => m.Name)">@T("Name")</label>
             @Html.TextBoxFor(m => m.Name, new { @class = "text" })
-            <span class="hint">@T("The name of the tenant as it will be displayed in the admin.")</span>
+            @Html.Hint(T("The name of the tenant as it will be displayed in the admin."))
         </div>        
         <div>
             <label for="@Html.FieldIdFor(m => m.RequestUrlHost)">@T("Host")</label>
             @Html.TextBoxFor(m => m.RequestUrlHost, new { @class = "textMedium" })
-            <span class="hint">@T("Example: If host is \"orchardproject.net\", the tenant site URL is \"http://orchardproject.net/\"")</span>
+            @Html.Hint(T("Example: If host is \"orchardproject.net\", the tenant site URL is \"http://orchardproject.net/\""))
         </div>
         <div>
             <label for="@Html.FieldIdFor(m => m.RequestUrlPrefix)">@T("URL prefix")</label>
             @Html.TextBoxFor(m => m.RequestUrlPrefix, new { @class = "textMedium" })
-            <span class="hint">@T("(Optional) Example: If prefix is \"site1\", the tenant URL prefix is \"http://orchardproject.net/site1\"")</span>
+            @Html.Hint(T("(Optional) Example: If prefix is \"site1\", the tenant URL prefix is \"http://orchardproject.net/site1\""))
         </div>
     </fieldset>
     <fieldset>
@@ -38,7 +38,7 @@
                 <span data-controllerid="sqlDatabaseOption">
                     <label for="DatabaseConnectionString">@T("Connection string")</label>
                     @Html.EditorFor(svm => svm.DatabaseConnectionString)
-                    <span class="hint">@T("Example:") @T("Data Source=sqlServerName;Initial Catalog=dbName;Persist Security Info=True;User ID=userName;Password=password")</span>
+                    @Html.Hint(T("Example:") @T("Data Source=sqlServerName;Initial Catalog=dbName;Persist Security Info=True;User ID=userName;Password=password"))
                 </span>
                 <span data-controllerid="sqlDatabaseOption">
                     <label for="DatabaseTablePrefix">@T("Database Table Prefix")</label>
@@ -60,7 +60,7 @@
                 @Html.HiddenFor(m => m.Themes[i].ThemeName)
             }
 
-            <span class="hint">@T("Select the Themes which should be available for this tenant. If none is selected, they will all be available.")</span>
+            @Html.Hint(T("Select the Themes which should be available for this tenant. If none is selected, they will all be available."))
         </div>  
     </fieldset>    
     

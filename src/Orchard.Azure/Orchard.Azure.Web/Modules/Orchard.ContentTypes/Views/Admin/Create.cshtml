@@ -7,10 +7,10 @@
     <fieldset>
         <label for="DisplayName">@T("Display Name")</label>
         @Html.TextBoxFor(m => m.DisplayName, new {@class = "textMedium", autofocus = "autofocus"})
-        <span class="hint">@T("Name of the type as it will be displayed in screens.")</span>
+        @Html.Hint(T("Name of the type as it will be displayed in screens."))
         <label for="Name">@T("Content Type Id")</label>
         @Html.TextBoxFor(m => m.Name, new {@class = "text"})
-        <span class="hint">@T("Technical name of the type.")</span>
+        @Html.Hint(T("Technical name of the type."))
     </fieldset>
     <fieldset>
         <button class="primaryAction" type="submit">@T("Create")</button>

@@ -1,4 +1,4 @@
-﻿@using Orchard.Utility.Extensions
+@using Orchard.Utility.Extensions
 @model Upgrade.ViewModels.MigrateViewModel
 
 @{ Layout.Title = T("Migrate Fields").ToString(); }
@@ -7,7 +7,7 @@
     Html.ValidationSummary();
     <fieldset>
         <legend>@T("Choose the types to migrate:")</legend>
-        <span class="hint">@T("The migration process fields data. You will still need to enable Orchard.Fields, and remove Contrib.DateTime and Contrib.MediaPicker if you have installed them.")</span>
+        @Html.Hint(T("The migration process fields data. You will still need to enable Orchard.Fields, and remove Contrib.DateTime and Contrib.MediaPicker if you have installed them."))
         <ol>
             @{ var contentTypeIndex = 0; }
             @foreach (var contentTypeEntry in Model.ContentTypes) {

@@ -1,4 +1,4 @@
-﻿@model Orchard.Media.ViewModels.MediaItemAddViewModel
+@model Orchard.Media.ViewModels.MediaItemAddViewModel
 @using Orchard.Media.Helpers;
 @using Orchard.Media.Models;
 @{
@@ -24,7 +24,7 @@
         @Html.LabelFor(m => m.ExtractZip, T("Extract Zip"))
         @Html.CheckBoxFor(m => m.ExtractZip)
 
-        <span class="hint">@T("After your files have been uploaded, you can edit the titles and descriptions.")</span>
+        @Html.Hint(T("After your files have been uploaded, you can edit the titles and descriptions."))
         <input type="hidden" id="FolderName" name="FolderName" value="@Model.FolderName" />
         <input type="hidden" id="MediaPath" name="MediaPath" value="@Model.MediaPath" />
     </fieldset>

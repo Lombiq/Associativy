@@ -1,4 +1,4 @@
-﻿@model Orchard.Workflows.ViewModels.AdminEditViewModel
+@model Orchard.Workflows.ViewModels.AdminEditViewModel
 @using Orchard.Workflows.Models;
 @using Orchard.Workflows.ViewModels;
 
@@ -9,7 +9,7 @@
         <div>
             <label for="name">@T("Name")</label>
             @Html.TextBox("name", String.Empty, new { @class= "textMedium text" })
-            <span class="hint">@T("The name of the Workflow")</span>
+            @Html.Hint(T("The name of the Workflow"))
         </div>
     </fieldset>
     

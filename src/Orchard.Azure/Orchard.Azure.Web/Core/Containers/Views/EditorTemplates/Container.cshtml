@@ -1,4 +1,4 @@
-﻿@model Orchard.Core.Containers.ViewModels.ContainerViewModel
+@model Orchard.Core.Containers.ViewModels.ContainerViewModel
 @using Orchard.Core.Containers.Models;
 <fieldset class="with-checkbox">
     <span class="checkbox-and-label">
@@ -9,7 +9,7 @@
 <fieldset>
 	@Html.LabelFor(m => m.Part.ItemContentType, T("Contains"))
 	@Html.DropDownListFor(m => m.Part.ItemContentType, Model.AvailableContainables)
-	<span class="hint">@T("Only types with the Containable part can be contained in a list.")</span>
+	@Html.Hint(T("Only types with the Containable part can be contained in a list."))
 </fieldset>
 <fieldset>
     @Html.LabelFor(m => m.Part.OrderByProperty, T("Order by"))

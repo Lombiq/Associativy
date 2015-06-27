@@ -1,4 +1,4 @@
-﻿@model ImportViewModel
+@model ImportViewModel
 @{
     Layout.Title = T("Import Terms for {0}", Model.Taxonomy.Name).Text;
 }
@@ -8,9 +8,9 @@
     <fieldset>
         <input type="hidden" value="@Model.Taxonomy.Id" name="id"/>
         <textarea rows="25" cols="80" onkeydown="return interceptTabs(event, this);" name="terms">@Model.Terms</textarea>
-        <span class="hint">@T("One term per line, followed by a semi-colon and the slug")</span>
-        <span class="hint">@T("Hierarchies are defined using tabs (handled in this editor zone)")</span>
-        <span class="hint">@T("e.g,")</span>
+        @Html.Hint(T("One term per line, followed by a semi-colon and the slug"))
+        @Html.Hint(T("Hierarchies are defined using tabs (handled in this editor zone)"))
+        @Html.Hint(T("e.g,"))
         <span class="hint">&nbsp;&nbsp;@T("Red; red")</span>
         <span class="hint">&nbsp;&nbsp;@T("Blue; blue")</span>
         <span class="hint">&nbsp;&nbsp;&nbsp;&nbsp;@T("Light Blue; light-blue")</span>

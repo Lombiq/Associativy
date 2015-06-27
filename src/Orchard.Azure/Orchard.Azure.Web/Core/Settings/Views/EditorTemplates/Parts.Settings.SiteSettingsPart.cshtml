@@ -1,4 +1,4 @@
-﻿@model Orchard.Core.Settings.ViewModels.SiteSettingsPartViewModel
+@model Orchard.Core.Settings.ViewModels.SiteSettingsPartViewModel
 @using Orchard.Settings;
 @{
     var resourceDebugMode = new SelectList(new object[] {
@@ -17,8 +17,8 @@
     <div>
         <label for="@Html.FieldIdFor(m => m.BaseUrl)">@T("Base url ")</label>
         @Html.TextBoxFor(m => m.BaseUrl, new { @class = "textMedium" })
-        <span class="hint">@T("Enter the fully qualified base url of your website.")</span>
-        <span class="hint">@T("e.g., http://localhost:30320/orchardlocal, http://www.yourdomain.com")</span>
+        @Html.Hint(T("Enter the fully qualified base url of your website."))
+        @Html.Hint(T("e.g., http://localhost:30320/orchardlocal, http://www.yourdomain.com"))
     </div>
     <div>
         <label for="SiteCulture">@T("Default Site Culture")</label>
@@ -30,7 +30,7 @@
         <label for="TimeZone">@T("Default Time Zone")</label>
         @Html.DropDownList("TimeZone", new[] { new SelectListItem { Text = T("Local to server").Text, Value = "" } }.Union(new SelectList(Model.TimeZones, "Id", "", Model.TimeZone)))
         @Html.ValidationMessage("TimeZone", "*")
-        <span class="hint">@T("Determines the default time zone which will should be used to display date and times.")</span>
+        @Html.Hint(T("Determines the default time zone which will should be used to display date and times."))
     </div>
     <div>
         <label for="PageTitleSeparator">@T("Page title separator")</label>
@@ -41,16 +41,16 @@
         <label for="SuperUser">@T("Super user")</label>
         @Html.EditorFor(x=>x.SuperUser)
         @Html.ValidationMessage("SuperUser", "*")
-        <span class="hint">@T("Enter an existing account name, or nothing if you don't want a Super user account")</span>
+        @Html.Hint(T("Enter an existing account name, or nothing if you don't want a Super user account"))
     </div>
     <div>
         <label for="SiteDebugMode">@T("Resource Debug Mode")</label>
         @Html.DropDownList("ResourceDebugMode", resourceDebugMode)
-        <span class="hint">@T("Determines whether scripts and stylesheets load in their debuggable or minified form.")</span>
+        @Html.Hint(T("Determines whether scripts and stylesheets load in their debuggable or minified form."))
     </div>
     <div>
         <label for="DefaultPageSize">@T("Default number of items per page")</label>
         @Html.TextBoxFor(m => m.PageSize, new { @class = "text-small" })
-        <span class="hint">@T("Determines the default number of items that are shown per page.")</span>
+        @Html.Hint(T("Determines the default number of items that are shown per page."))
     </div>
 </fieldset>

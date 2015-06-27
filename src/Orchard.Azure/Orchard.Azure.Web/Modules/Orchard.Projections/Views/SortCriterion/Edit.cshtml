@@ -1,4 +1,4 @@
-﻿@model SortCriterionEditViewModel
+@model SortCriterionEditViewModel
 @using Orchard.Projections.Models;
 @using Orchard.Projections.ViewModels;
            
@@ -16,7 +16,7 @@
 <fieldset>
     @Html.LabelFor(m => m.Description, T("Description"))
     @Html.TextBoxFor(m => m.Description, new { @class = "textMedium" })
-    <span class="hint">@T("You may optionally give a description to this sort criterion, to be used in the dashboard screens.")</span>
+    @Html.Hint(T("You may optionally give a description to this sort criterion, to be used in the dashboard screens."))
 </fieldset>
 
     @* Render the dynamic form *@    

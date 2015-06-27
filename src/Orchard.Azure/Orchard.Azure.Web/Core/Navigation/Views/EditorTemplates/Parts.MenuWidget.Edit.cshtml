@@ -1,4 +1,4 @@
-﻿@model Orchard.Core.Navigation.ViewModels.MenuWidgetViewModel
+@model Orchard.Core.Navigation.ViewModels.MenuWidgetViewModel
 @using Orchard.ContentManagement
 @using Orchard.Core.Navigation.Models;
 
@@ -9,37 +9,37 @@
             @Html.SelectOption(Model.CurrentMenuId, menu.Id, Html.ItemDisplayText(menu).ToString())
 		}
 		</select>
-        <span class="hint">@T("Select which menu you want to display")</span>
+        @Html.Hint(T("Select which menu you want to display"))
     </fieldset>
 
     <fieldset>
         <label for="@Html.FieldIdFor(m => m.StartLevel)">@T("Start Level")</label>
         @Html.TextBoxFor(m => m.StartLevel, new { @class = "text text-small" })
-        <span class="hint">@T("The level the menu should start at.")</span>
+        @Html.Hint(T("The level the menu should start at."))
     </fieldset>
 
     <fieldset>
         <label for="@Html.FieldIdFor(m => m.StopLevel)">@T("Levels to display")</label>
         @Html.TextBoxFor(m => m.StopLevel, new { @class = "text text-small" })
-        <span class="hint">@T("The number of levels to display, \"0\" meaning all levels.")</span>
+        @Html.Hint(T("The number of levels to display, \"0\" meaning all levels."))
     </fieldset>
 
     <fieldset>
         @Html.EditorFor(m => m.Breadcrumb) 
         <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Breadcrumb)">@T("Display as Breadcrumb")</label>
-        <span class="hint">@T("Check to render the path to the current content item.")</span>
+        @Html.Hint(T("Check to render the path to the current content item."))
     </fieldset>
     
     <div data-controllerid="@Html.FieldIdFor(m => m.Breadcrumb)">
         <fieldset>
             @Html.EditorFor(m => m.AddHomePage) 
             <label class="forcheckbox" for="@Html.FieldIdFor(m => m.AddHomePage)">@T("Add the home page as the first element")</label>
-            <span class="hint">@T("Check to render the home page as the first element of the breadcrumb.")</span>
+            @Html.Hint(T("Check to render the home page as the first element of the breadcrumb."))
         </fieldset>
 
         <fieldset>
             @Html.EditorFor(m => m.AddCurrentPage) 
             <label class="forcheckbox" for="@Html.FieldIdFor(m => m.AddCurrentPage)">@T("Add the current content item as the last element")</label>
-            <span class="hint">@T("Check to render the current content item as the last element.")</span>
+            @Html.Hint(T("Check to render the current content item as the last element."))
         </fieldset>
     </div>

@@ -1,4 +1,4 @@
-﻿@model LayoutEditViewModel
+@model LayoutEditViewModel
 @using Orchard.Projections.Models;
 @using Orchard.Projections.ViewModels;
            
@@ -20,7 +20,7 @@
     <fieldset>
         @Html.LabelFor(m => m.Description, T("Description"))
         @Html.TextBoxFor(m => m.Description, new { @class = "textMedium" })
-        <span class="hint">@T("You may optionally give a description to this layout, to be used in the dashboard screens.")</span>
+        @Html.Hint(T("You may optionally give a description to this layout, to be used in the dashboard screens."))
     </fieldset>
 
     <fieldset>
@@ -31,13 +31,13 @@
             <br />
             @Html.RadioButton(Html.FieldNameFor(m => m.Display), (int)LayoutRecord.Displays.Properties, Model.Display == (int)LayoutRecord.Displays.Properties, new { id = "display-fields-radio" })
             <label for="display-fields-radio" class="forcheckbox">@T("Properties")</label>
-            <span class="hint">@T("You can choose to display each content item using specific properties only.")</span>
+            @Html.Hint(T("You can choose to display each content item using specific properties only."))
 
             <div class="options">
                 <span data-controllerid="display-content-radio">
                     <label for="DatabaseConnectionString">@T("Display Type")</label>
                     @Html.TextBoxFor(m => m.DisplayType, new { @class = "textMedium" })
-                    <span class="hint">@T("The display type determines how the content item should be formatted. e.g., Summary, SummaryAdmin, Detail, ...")</span>
+                    @Html.Hint(T("The display type determines how the content item should be formatted. e.g., Summary, SummaryAdmin, Detail, ..."))
                 </span>
             </div>
 
@@ -92,10 +92,10 @@
                 @Html.SelectOption(Model.GroupPropertyId, property.PropertyRecordId, property.DisplayText)
             }
         </select>
-        <span class="hint">@T("Optionally, select a property which will be used to group content items.")</span>
+        @Html.Hint(T("Optionally, select a property which will be used to group content items."))
     }
     else {
-        <span class="hint">@T("No properties are currently available in order to group this view.")</span>
+        @Html.Hint(T("No properties are currently available in order to group this view."))
     }        
 
         @* Render the dynamic form *@    

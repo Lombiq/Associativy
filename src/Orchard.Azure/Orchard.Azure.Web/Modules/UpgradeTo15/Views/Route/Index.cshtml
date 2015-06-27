@@ -1,4 +1,4 @@
-﻿@using Orchard.Utility.Extensions
+@using Orchard.Utility.Extensions
 @model UpgradeTo15.ViewModels.MigrateViewModel
 
 @{ Layout.Title = T("Migrate Routes").ToString(); }
@@ -7,7 +7,7 @@
     Html.ValidationSummary();
     <fieldset>
         <legend>@T("Choose the types to migrate:")</legend>
-        <span class="hint">@T("The migration process will move the Route and Title properties by adding an Autoroute and a Title part to all the content items for the selected content types.")</span>
+        @Html.Hint(T("The migration process will move the Route and Title properties by adding an Autoroute and a Title part to all the content items for the selected content types."))
         <ol>
             @{ var contentTypeIndex = 0; }
             @foreach (var contentTypeEntry in Model.ContentTypes) {

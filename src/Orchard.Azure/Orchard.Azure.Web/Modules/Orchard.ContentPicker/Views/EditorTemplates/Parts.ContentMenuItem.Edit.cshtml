@@ -1,4 +1,4 @@
-﻿@using Orchard.Environment.Configuration
+@using Orchard.Environment.Configuration
 @model Orchard.ContentPicker.ViewModels.ContentMenuItemEditViewModel
 @{
     Script.Require("ContentPicker").AtFoot();
@@ -10,7 +10,7 @@
     <span id="btn-@Html.FieldIdFor(m => m.ContentItemId)" class="button">@T("Browse")</span>
 
     @Html.HiddenFor(m => m.ContentItemId)
-    <span class="hint">@T("Select the Content Item to display in the menu.")</span>
+    @Html.Hint(T("Select the Content Item to display in the menu."))
 </fieldset>
 
 @using(Script.Foot()) {

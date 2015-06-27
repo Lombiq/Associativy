@@ -1,11 +1,11 @@
-﻿@model TermWidgetViewModel
+@model TermWidgetViewModel
 @{
     Script.Require("jQuery");
 }
 <fieldset>
     @Html.LabelFor(m => m.SelectedTaxonomyId, T("Taxonomy"))
     @Html.DropDownListFor(m => m.SelectedTaxonomyId, Model.AvailableTaxonomies)
-    <span class="hint">@T("Select a taxonomy.")</span>
+    @Html.Hint(T("Select a taxonomy."))
 </fieldset>
 
 <fieldset>
@@ -14,13 +14,13 @@
         @Html.SelectOption(-1, false, T("- None -").ToString())
         @{Html.RenderAction("RenderTermSelect", "TermAdmin", new { area = "Orchard.Taxonomies", taxonomyId = Model.SelectedTaxonomyId, selectedTermId = Model.SelectedTermId });}
     </select>
-    <span class="hint">@T("Select the term whose content items will be displayed.")</span>
+    @Html.Hint(T("Select the term whose content items will be displayed."))
 </fieldset>
 
 <fieldset>
     @Html.LabelFor(m => m.FieldName, T("Field"))
     @Html.TextBoxFor(m => m.FieldName, new { @class = "text" })
-    <span class="hint">@T("Optional. You can specify which field name to use if several terms references are defined on the same content type.")</span>
+    @Html.Hint(T("Optional. You can specify which field name to use if several terms references are defined on the same content type."))
 </fieldset>
 
 <fieldset>
@@ -48,7 +48,7 @@
             @Html.SelectOption(Model.Part.ContentType, contentType, contentType)
         }
         </select>
-        <span class="hint">@T("Select which Content Type you want to display")</span>
+        @Html.Hint(T("Select which Content Type you want to display"))
     </div>
 </fieldset>
 

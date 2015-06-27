@@ -11,7 +11,7 @@
     <fieldset>
         <label for="DisplayName">@T("Display Name")</label>
         @Html.TextBoxFor(m => m.DisplayName, new {@class = "textMedium", autofocus = "autofocus"})
-        <span class="hint">@T("Name of the field as it will be displayed in screens.")</span>
+        @Html.Hint(T("Name of the field as it will be displayed in screens."))
         
         @Html.HiddenFor(m => m.Name)
     </fieldset>

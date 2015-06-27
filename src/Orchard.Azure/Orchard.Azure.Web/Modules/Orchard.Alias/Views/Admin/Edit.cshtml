@@ -10,13 +10,13 @@
         <label for="aliasPath">@T("Alias Path")</label>
         @Html.TextBox("aliasPath", null, new { @class = "large text" })
         @Html.ValidationMessage("aliasPath")
-        <span class="hint">@T("The path of the alias e.g., my-blog/my-post")</span>
+        @Html.Hint(T("The path of the alias e.g., my-blog/my-post"))
     </div>
     <div>
         <label for="routePath">@T("Route Path")</label>
         @Html.TextBox("routePath", null, new { @class = "textMedium" })
         @Html.ValidationMessage("routePath")
-        <span class="hint">@T("The actual route Orchard should call when the path is requested e.g., Blogs/Blog/Item?blogId=18")</span>
+        @Html.Hint(T("The actual route Orchard should call when the path is requested e.g., Blogs/Blog/Item?blogId=18"))
     </div>
 </fieldset>
 <fieldset>
