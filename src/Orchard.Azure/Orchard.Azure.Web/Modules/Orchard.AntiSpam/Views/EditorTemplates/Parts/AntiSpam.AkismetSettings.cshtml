@@ -1,4 +1,4 @@
-﻿﻿@model Orchard.AntiSpam.Models.AkismetSettingsPartRecord
+﻿@model Orchard.AntiSpam.Models.AkismetSettingsPartRecord
 @using Orchard.Utility.Extensions;
 
 <fieldset>
@@ -6,12 +6,12 @@
    <div>
        @Html.EditorFor(m => m.TrustAuthenticatedUsers)
        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.TrustAuthenticatedUsers)">@T("Trust content submitted by authenticated users")</label>
-       <span class="hint">@T("Check if authenticated users should have their content automatically approved.")</span>
+       @Html.Hint(T("Check if authenticated users should have their content automatically approved."))
    </div>
    <div>
        <label for="@Html.FieldIdFor(m => m.ApiKey)">@T("Api key")</label>
        @Html.TextBoxFor(m => m.ApiKey, new { @class = "textMedium" })
        @Html.ValidationMessage("ApiKey", "*")
-       <span class="hint">@T("API key for <a href=\"http://akismet.com/personal/\">Akismet</a> service.")</span>
+       @Html.Hint(T("API key for <a href=\"http://akismet.com/personal/\">Akismet</a> service."))
    </div>
 </fieldset>

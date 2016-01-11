@@ -1,4 +1,4 @@
-﻿@model Orchard.ContentPermissions.ViewModels.ContentPermissionsPartViewModel
+@model Orchard.ContentPermissions.ViewModels.ContentPermissionsPartViewModel
 
 @{
     Style.Include("orchard-contentpermissions-admin.css");
@@ -7,7 +7,7 @@
 <div>
     @Html.EditorFor(m => m.Enabled) 
     <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Enabled)">@T("Enable Content Item access control")</label>
-    <span class="hint">@T("Check to define custom permissions for this content item.")</span>
+    @Html.Hint(T("Check to define custom permissions for this content item."))
 </div>
 
 <div data-controllerid="@Html.FieldIdFor(m => m.Enabled)">

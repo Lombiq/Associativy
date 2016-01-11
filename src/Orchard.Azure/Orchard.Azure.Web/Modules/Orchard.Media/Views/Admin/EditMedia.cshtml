@@ -1,4 +1,4 @@
-﻿@model Orchard.Media.ViewModels.MediaItemEditViewModel
+@model Orchard.Media.ViewModels.MediaItemEditViewModel
 @using Orchard.Media.Extensions;
 @using Orchard.Media.Helpers;
 @using Orchard.Media.Models;
@@ -42,7 +42,7 @@
         <div>
             <label for="embedPath">@T("Embed:")</label>
             <input id="embedPath" class="textMedium" name="embedPath" type="text" readonly="readonly" value="@embedHTML" />
-            <span class="hint">@T("Copy this html to add this media file to your site.")</span>
+            @Html.Hint(T("Copy this html to add this media file to your site."))
         </div>
 
         @using (Html.BeginFormAntiForgeryPost()) {

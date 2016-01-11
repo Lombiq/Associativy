@@ -1,10 +1,10 @@
-﻿@model Orchard.ContentPermissions.ViewModels.ContentPermissionsPartViewModel
+@model Orchard.ContentPermissions.ViewModels.ContentPermissionsPartViewModel
 
 @{
     Style.Include("orchard-contentpermissions-admin.css");
 }
 
-<span class="hint">@T("Those permissions will be applied by default to any content item of this type. Users with sufficient permissions can change them for each content item.")</span>
+@Html.Hint(T("Those permissions will be applied by default to any content item of this type. Users with sufficient permissions can change them for each content item."))
 
 <fieldset>
     <div>
@@ -99,7 +99,7 @@
     <div>
         
         <h4>@T("Only show those roles in the editor:")</h4>
-        <span class="hint">@T("Uncheck the roles for which you don't want the editor to change the permissions for.")</span>
+        @Html.Hint(T("Uncheck the roles for which you don't want the editor to change the permissions for."))
         <div>
             <ul>
 

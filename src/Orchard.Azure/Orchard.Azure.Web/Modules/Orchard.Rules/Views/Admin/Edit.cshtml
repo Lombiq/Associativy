@@ -1,4 +1,4 @@
-﻿@model Orchard.Rules.ViewModels.EditRuleViewModel
+@model Orchard.Rules.ViewModels.EditRuleViewModel
 
 @{
     Layout.Title = T("Edit Rule").Text;
@@ -12,7 +12,7 @@
     <fieldset>
         @Html.LabelFor(m => m.Name)
         @Html.TextBoxFor(m => m.Name, new { @class = "textMedium text" }) 
-        <span class="hint">@T("The name of the Rule")</span>
+        @Html.Hint(T("The name of the Rule"))
     </fieldset>
 
     <fieldset class="bulk-actions">

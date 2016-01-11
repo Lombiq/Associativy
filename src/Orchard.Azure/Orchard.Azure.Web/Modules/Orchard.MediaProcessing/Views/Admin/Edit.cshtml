@@ -1,4 +1,4 @@
-﻿@model Orchard.MediaProcessing.ViewModels.AdminEditViewModel
+@model Orchard.MediaProcessing.ViewModels.AdminEditViewModel
 @{
     Layout.Title = T("Edit Media Profile - {0}", Model.Name).Text;
 }
@@ -41,7 +41,7 @@
         }
     </table>
     
-    <span class="hint">@T("Usage example: ")@("@Display.MediaUrl(Profile: \"")@Model.Name@("\", Path: Model.ContentItem.Contact.Picture.Url)")</span>
+    @Html.Hint(T("Usage example: ")@("@Display.MediaUrl(Profile: \"")@Model.Name@("\", Path: Model.ContentItem.Contact.Picture.Url)"))
         
     <fieldset>
         @*@Html.ActionLink(T("Preview").ToString(), "Preview", new { Model.Id }, new { @class = "button" })*@

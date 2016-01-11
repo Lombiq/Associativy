@@ -9,9 +9,9 @@
   width: auto;
 }
 #presets-table th:nth-child(1),
-#presets-table th:nth-child(3),
+#presets-table th:nth-child(4),
 #presets-table td:nth-child(1),
-#presets-table td:nth-child(3) {
+#presets-table td:nth-child(4) {
   text-align: center;
 }
 #presets-table td:nth-child(2) {

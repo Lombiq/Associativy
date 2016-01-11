@@ -1,4 +1,4 @@
-﻿@model Orchard.Blogs.ViewModels.RecentBlogPostsViewModel
+@model Orchard.Blogs.ViewModels.RecentBlogPostsViewModel
 
 @using Orchard.Blogs.Models;
 @using Orchard.ContentManagement;
@@ -11,11 +11,11 @@
             @Html.SelectOption(Model.BlogId, blog.ContentItem.Id, blog.Name)
 		}
 		</select>
-        <span class="hint">@T("Select which blog you want to display the recent posts for")</span>
+        @Html.Hint(T("Select which blog you want to display the recent posts for"))
     </div>
     <div>
         @Html.LabelFor(m => m.Count, T("Count"))
         @Html.TextBoxFor(m => m.Count, new { @class = "text-small"})
-        <span class="hint">@T("Number of posts to display. Zero for all.")</span>
+        @Html.Hint(T("Number of posts to display. Zero for all."))
     </div>
 </fieldset>

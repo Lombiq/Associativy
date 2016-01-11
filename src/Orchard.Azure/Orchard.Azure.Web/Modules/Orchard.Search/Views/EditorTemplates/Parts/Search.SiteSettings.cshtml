@@ -1,4 +1,4 @@
-﻿@using Orchard.Search.ViewModels
+@using Orchard.Search.ViewModels
 @model Orchard.Search.ViewModels.SearchSettingsViewModel
 @{
     Script.Require("jQuery");
@@ -19,7 +19,7 @@
             @Html.SelectOption(Model.SelectedIndex, modelEntry.Index, modelEntry.Index)
             }
         </select>
-        <span class="hint">@T("Select which index to use in search queries.")</span>
+        @Html.Hint(T("Select which index to use in search queries."))
 
         <label>@T("Fields")</label>
             <ul>
@@ -44,19 +44,19 @@
                     entryIndex++;
                 }
             </ul>
-            <span class="hint">@T("Check any property which should be used for search queries.")</span>
+            @Html.Hint(T("Check any property which should be used for search queries."))
 
         }
 
         else {
-            <span class="hint">@T("There is currently no index to search from. Please update you index, and check some indexable content exists.")</span>
+            @Html.Hint(T("There is currently no index to search from. Please update you index, and check some indexable content exists."))
         }
     </div>
     <div>
         <label>@T("Localization")</label>
         @Html.EditorFor(m => m.FilterCulture)
         <label class="forcheckbox" for="@Html.FieldIdFor(m => m.FilterCulture)">@T("Narrow search to current culture only")</label>
-        <span class="hint">@T("If checked, search results will only include content items localized in the current culture of the request.")</span>
+        @Html.Hint(T("If checked, search results will only include content items localized in the current culture of the request."))
     </div>
 
 </fieldset>

@@ -1,4 +1,4 @@
-﻿@using Orchard.ImageEditor.Models
+@using Orchard.ImageEditor.Models
 @{
     ImageEditorPart imageEditorPart = Model.ContentPart;
 }
@@ -12,12 +12,12 @@
         <div>
             <label for="resize-width">@T("Width")</label>
             <input id="resize-width" value="@imageEditorPart.ImagePart.Width" class="text small">
-            <span class="hint">@T("The width of the new image in pixels.")</span>
+            @Html.Hint(T("The width of the new image in pixels."))
         </div>
         <div>
             <label for="resize-height">@T("Height")</label>
             <input id="resize-height" value="@imageEditorPart.ImagePart.Height" class="text small">
-            <span class="hint">@T("The height of the new image in pixels.")</span>
+            @Html.Hint(T("The height of the new image in pixels."))
         </div>
     </fieldset>
 
@@ -25,4 +25,3 @@
     <button id="resize-cancel">@T("Cancel")</button>
 
 </div>
-

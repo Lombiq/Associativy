@@ -7,7 +7,7 @@
     <fieldset>
         <label for="Name">@T("Name")</label>
         @Html.TextBoxFor(m => m.Name, new {@class = "textMedium", autofocus = "autofocus"})
-        <span class="hint">@T("Use no spaces or special characters. For example, \"MyCustomPart\"")</span>
+        @Html.Hint(T("Use no spaces or special characters. For example, \"MyCustomPart\""))
     </fieldset>
     <fieldset>
         <button class="primaryAction" type="submit">@T("Create")</button>

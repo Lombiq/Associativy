@@ -1,4 +1,4 @@
-﻿@model Orchard.Autoroute.ViewModels.AutoroutePartEditViewModel
+@model Orchard.Autoroute.ViewModels.AutoroutePartEditViewModel
 @using Orchard.Autoroute
 @using Orchard.Utility.Extensions;
 @using Orchard.Environment.Configuration
@@ -27,7 +27,7 @@
             <span>@ViewContext.RequestContext.HttpContext.Request.ToApplicationRootUrlString()/@urlPrefix</span>
         }
 
-        <span class="hint">@T("Save the current item and leave the input empty to have it automatically generated using the pattern {0} e.g., {1}", defaultPattern.Name, defaultPattern.Description)</span>
+        @Html.Hint(T("Save the current item and leave the input empty to have it automatically generated using the pattern {0} e.g., {1}", defaultPattern.Name, defaultPattern.Description))
 
     </fieldset>
     if (AuthorizedFor(Permissions.SetHomePage)) {
@@ -36,7 +36,7 @@
                  @Html.EditorFor(m => m.PromoteToHomePage)
                  <label for="@Html.FieldIdFor(m => m.PromoteToHomePage)" class="forcheckbox">@T("Set as home page")</label>
              </span>
-             <span class="hint">@T("Check to promote this content as the home page")</span>
+             @Html.Hint(T("Check to promote this content as the home page"))
          </fieldset>
      }
 }

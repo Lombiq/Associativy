@@ -1,4 +1,4 @@
-﻿@model Orchard.MediaProcessing.ViewModels.FilterEditViewModel          
+@model Orchard.MediaProcessing.ViewModels.FilterEditViewModel          
 @{
     Layout.Title = T("Edit Filter - {0}", Model.Filter.Name);
 }
@@ -13,7 +13,7 @@
 <fieldset>
     @Html.LabelFor(m => m.Description, T("Description"))
     @Html.TextBoxFor(m => m.Description, new { @class = "textMedium" })
-    <span class="hint">@T("You may optionally give a description to this filter, to be used in the dashboard screens.")</span>
+    @Html.Hint(T("You may optionally give a description to this filter, to be used in the dashboard screens."))
 </fieldset>
 
     @* Render the dynamic form *@    

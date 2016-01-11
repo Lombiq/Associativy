@@ -1,4 +1,4 @@
-﻿@model ProjectionPartEditViewModel
+@model ProjectionPartEditViewModel
 @using Orchard.Projections.Models;
 @using Orchard.Projections.ViewModels;
 
@@ -28,38 +28,38 @@
     @if (selectedQueryRecordId != -1) {
         @Html.ActionLink(T("Edit Query").Text, "Edit", new { area = "Orchard.Projections", id = selectedQueryRecordId }, new { })
     }
-    <span class="hint">@T("The query to display.")</span>
+    @Html.Hint(T("The query to display."))
 </fieldset>
 
 <fieldset>
     <div>
         @Html.LabelFor(m => m.Items, T("Items to display"))
         @Html.TextBoxFor(m => m.Items, new { @class = "text-small" })
-        <span class="hint">@T("The number of items to display. Enter 0 for no limit. When using pagination, this is the number of items per page.")</span>
+        @Html.Hint(T("The number of items to display. Enter 0 for no limit. When using pagination, this is the number of items per page."))
     </div>
 
     <div>
         @Html.LabelFor(m => m.Skip, T("Offset"))
         @Html.TextBoxFor(m => m.Skip, new { @class = "text-small" })
-        <span class="hint">@T("The number of items to skip (e.g., if 2 is entered, the first 2 items won't be diplayed).")</span>
+        @Html.Hint(T("The number of items to skip (e.g., if 2 is entered, the first 2 items won't be diplayed)."))
     </div>
 
     <div>
         @Html.LabelFor(m => m.MaxItems, T("Maximum items"))
         @Html.TextBoxFor(m => m.MaxItems, new { @class = "text-small" })
-        <span class="hint">@T("Maximum number of items which can be queried at once. Use 0 for unlimited. This is only used as a failsafe when the number of items comes from a user-provided source such as the query string.")</span>
+        @Html.Hint(T("Maximum number of items which can be queried at once. Use 0 for unlimited. This is only used as a failsafe when the number of items comes from a user-provided source such as the query string."))
     </div>
 
     <div>
         @Html.LabelFor(m => m.PagerSuffix, T("Suffix"))
         @Html.TextBoxFor(m => m.PagerSuffix, new { @class = "text-box" })
-        <span class="hint">@T("Optional. Provide a suffix to use when multiple pagers are displayed on the same page, e.g., when using multiple Projection Widgets, or to define alternates.")</span>
+        @Html.Hint(T("Optional. Provide a suffix to use when multiple pagers are displayed on the same page, e.g., when using multiple Projection Widgets, or to define alternates."))
     </div>
 
     <div>
         @Html.CheckBoxFor(m => m.DisplayPager)
         <label class="forcheckbox" for="@Html.FieldIdFor(m => m.DisplayPager)">@T("Show pager")</label>
-        <span class="hint">@T("Check to add a pager to the list.")</span>
+        @Html.Hint(T("Check to add a pager to the list."))
     </div>
 </fieldset>
 
