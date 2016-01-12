@@ -1,4 +1,6 @@
-﻿angular.module("LayoutEditor", ["ngSanitize", "ngResource", "ui.sortable"]);
+﻿///#source 1 1 LayoutEditor/Module.js
+angular.module("LayoutEditor", ["ngSanitize", "ngResource", "ui.sortable"]);
+///#source 1 1 LayoutEditor/Services/Clipboard.js
 var LayoutEditor;
 (function(LayoutEditor) {
 
@@ -31,6 +33,7 @@ var LayoutEditor;
             }
         ]);
 })(LayoutEditor || (LayoutEditor = {}));
+///#source 1 1 LayoutEditor/Services/ScopeConfigurator.js
 angular
     .module("LayoutEditor")
     .factory("scopeConfigurator", ["$timeout", "clipboard",
@@ -352,6 +355,7 @@ angular
             };
         }
     ]);
+///#source 1 1 LayoutEditor/Directives/Editor.js
 angular
     .module("LayoutEditor")
     .directive("orcLayoutEditor", ["environment",
@@ -528,6 +532,7 @@ angular
             };
         }
     ]);
+///#source 1 1 LayoutEditor/Directives/Canvas.js
 angular
     .module("LayoutEditor")
     .directive("orcLayoutCanvas", ["scopeConfigurator", "environment",
@@ -547,6 +552,7 @@ angular
             };
         }
     ]);
+///#source 1 1 LayoutEditor/Directives/Child.js
 angular
     .module("LayoutEditor")
     .directive("orcLayoutChild", ["$compile",
@@ -562,6 +568,7 @@ angular
             };
         }
     ]);
+///#source 1 1 LayoutEditor/Directives/Column.js
 angular
     .module("LayoutEditor")
     .directive("orcLayoutColumn", ["$compile", "scopeConfigurator", "environment",
@@ -630,6 +637,7 @@ angular
             };
         }
     ]);
+///#source 1 1 LayoutEditor/Directives/Content.js
 angular
     .module("LayoutEditor")
     .directive("orcLayoutContent", ["$sce", "scopeConfigurator", "environment",
@@ -666,6 +674,7 @@ angular
             };
         }
     ]);
+///#source 1 1 LayoutEditor/Directives/Html.js
 angular
     .module("LayoutEditor")
     .directive("orcLayoutHtml", ["$sce", "scopeConfigurator", "environment",
@@ -714,6 +723,7 @@ angular
             };
         }
     ]);
+///#source 1 1 LayoutEditor/Directives/Grid.js
 angular
     .module("LayoutEditor")
     .directive("orcLayoutGrid", ["$compile", "scopeConfigurator", "environment",
@@ -733,6 +743,7 @@ angular
             };
         }
     ]);
+///#source 1 1 LayoutEditor/Directives/Row.js
 angular
     .module("LayoutEditor")
     .directive("orcLayoutRow", ["$compile", "scopeConfigurator", "environment",
@@ -753,6 +764,7 @@ angular
             };
         }
     ]);
+///#source 1 1 LayoutEditor/Directives/Popup.js
 angular
     .module("LayoutEditor")
     .directive("orcLayoutPopup", [
@@ -789,6 +801,7 @@ angular
             };
         }
     ]);
+///#source 1 1 LayoutEditor/Directives/Toolbox.js
 angular
     .module("LayoutEditor")
     .directive("orcLayoutToolbox", ["$compile", "environment",
@@ -961,6 +974,7 @@ angular
             };
         }
     ]);
+///#source 1 1 LayoutEditor/Directives/ToolboxGroup.js
 angular
     .module("LayoutEditor")
     .directive("orcLayoutToolboxGroup", ["$compile", "environment",

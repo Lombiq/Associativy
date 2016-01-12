@@ -616,6 +616,16 @@
   <ItemGroup>
     <Content Include="Views\LayoutEditor.Template.Html.cshtml" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\LayoutEditor.min.js.map">
+      <DependentUpon>LayoutEditor.min.js</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\Models.min.js.map">
+      <DependentUpon>Models.min.js</DependentUpon>
+    </Content>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

@@ -1,4 +1,5 @@
-﻿angular
+﻿///#source 1 1 /Scripts/Layouts/Directives/Form.js
+angular
     .module("LayoutEditor")
     .directive("orcLayoutForm", ["$compile", "scopeConfigurator", "environment",
         function ($compile, scopeConfigurator, environment) {
@@ -27,6 +28,7 @@
             };
         }
     ]);
+///#source 1 1 /Scripts/Layouts/Models/Form.js
 var LayoutEditor;
 (function ($, LayoutEditor) {
 

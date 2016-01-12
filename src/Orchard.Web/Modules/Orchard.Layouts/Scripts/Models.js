@@ -1,4 +1,5 @@
-﻿var LayoutEditor;
+﻿///#source 1 1 Models/Helpers.js
+var LayoutEditor;
 (function (LayoutEditor) {
 
     Array.prototype.move = function (from, to) {
@@ -40,6 +41,7 @@
     };
 
 })(LayoutEditor || (LayoutEditor = {}));
+///#source 1 1 Models/Editor.js
 var LayoutEditor;
 (function (LayoutEditor) {
 
@@ -73,6 +75,7 @@ var LayoutEditor;
 
 })(LayoutEditor || (LayoutEditor = {}));
 
+///#source 1 1 Models/Element.js
 var LayoutEditor;
 (function (LayoutEditor) {
 
@@ -251,6 +254,7 @@ var LayoutEditor;
     };
 
 })(LayoutEditor || (LayoutEditor = {}));
+///#source 1 1 Models/Container.js
 var LayoutEditor;
 (function (LayoutEditor) {
 
@@ -384,6 +388,7 @@ var LayoutEditor;
     };
 
 })(LayoutEditor || (LayoutEditor = {}));
+///#source 1 1 Models/Canvas.js
 var LayoutEditor;
 (function (LayoutEditor) {
 
@@ -410,6 +415,7 @@ var LayoutEditor;
 
 })(LayoutEditor || (LayoutEditor = {}));
 
+///#source 1 1 Models/Grid.js
 var LayoutEditor;
 (function (LayoutEditor) {
 
@@ -439,6 +445,7 @@ var LayoutEditor;
     };
 
 })(LayoutEditor || (LayoutEditor = {}));
+///#source 1 1 Models/Row.js
 var LayoutEditor;
 (function (LayoutEditor) {
 
@@ -724,6 +731,7 @@ var LayoutEditor;
     };
 
 })(LayoutEditor || (LayoutEditor = {}));
+///#source 1 1 Models/Column.js
 var LayoutEditor;
 (function (LayoutEditor) {
 
@@ -860,6 +868,7 @@ var LayoutEditor;
     };
 
 })(LayoutEditor || (LayoutEditor = {}));
+///#source 1 1 Models/Content.js
 var LayoutEditor;
 (function (LayoutEditor) {
 
@@ -918,6 +927,7 @@ var LayoutEditor;
     };
 
 })(LayoutEditor || (LayoutEditor = {}));
+///#source 1 1 Models/Html.js
 var LayoutEditor;
 (function ($, LayoutEditor) {
 
