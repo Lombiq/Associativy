@@ -1,7 +1,0 @@
-@model Orchard.Core.Title.Models.TitlePart
-
-<fieldset>
-    @Html.LabelFor(m => m.Title, T("Title"))
-    @Html.TextBoxFor(m => m.Title, new { @class = "large text", autofocus = "autofocus" })
-    @Html.Hint(T("You must provide a title for this content item"))
-</fieldset>
