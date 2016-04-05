@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <LibFolder>$(MSBuildProjectDirectory)\lib</LibFolder>
@@ -293,5 +293,5 @@
     </CompileTypeScriptFiles>
   </Target>
   <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.CompileTypeScriptFiles" />
-  <Import Project="$(LibFolder)\slowcheetah\SlowCheetah.Transforms.targets" xmlns="" />
+  <Import Project="$(LibFolder)\slowcheetah\SlowCheetah.Transforms.targets" />
 </Project>
