@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <LibFolder>$(MSBuildProjectDirectory)\lib</LibFolder>
@@ -25,7 +25,7 @@
     <Version>$(BUILD_NUMBER)</Version>
     <Configuration Condition="$(Configuration) == ''">Release</Configuration>
   </PropertyGroup>
-  <Import Project="$(LibFolder)\msbuild\MSBuild.Community.Tasks.Targets" />
+  <Import Project="$(LibFolder)\msbuildtasks\MSBuild.Community.Tasks.Targets" />
   <Target Name="Build">
     <CallTarget Targets="Clean" />
     <CallTarget Targets="Compile" />
@@ -75,10 +75,10 @@
     <CallTarget Targets="Gallery-Setup" />
   </Target>
   <Target Name="AzureBuild">
-    <MSBuild Projects="AzurePackage.proj" Targets="Build"></MSBuild>
+    <MSBuild Projects="AzurePackage.proj" Targets="Build" />
   </Target>
   <Target Name="AzureCIBuild">
-    <MSBuild Projects="AzurePackage.proj" Targets="CIBuild"></MSBuild>
+    <MSBuild Projects="AzurePackage.proj" Targets="CIBuild" />
   </Target>
   <Target Name="Clean">
     <MSBuild Projects="$(SrcFolder)\Orchard.sln" Targets="Clean" />
@@ -117,7 +117,6 @@
     </CreateItem>
     <NUnit Assemblies="@(SpecAssemblies)" ToolPath="$(LibFolder)\nunit" />
   </Target>
-  <UsingTask AssemblyFile="$(LibFolder)\slowcheetah\SlowCheetah.Xdt.dll" TaskName="SlowCheetah.Xdt.TransformXml" />
   <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.FilterModuleBinaries" />
   <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.FileUpdateLines" />
   <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.ValidateExtensionProjectFiles" />
@@ -210,7 +209,7 @@
   <Target Name="Package-MsDeploy">
     <ItemGroup>
       <!--<MsDeploy-Folder-Input Include="$(StageFolder)\**\*" Exclude="$(StageFolder)\**\bin\**\*.pdb;$(StageFolder)\**\bin\**\*.xml" />-->
-      <MsDeploy-Exclude-Modules Include="         $(StageFolder)\**\Modules\Orchard.Media\**;         $(StageFolder)\**\Modules\Orchard.MediaPicker\**;         $(StageFolder)\**\Modules\Orchard.Rules\**;         " />
+      <MsDeploy-Exclude-Modules Include="$(StageFolder)\**\Modules\Orchard.CustomForms\**;$(StageFolder)\**\Modules\Orchard.jQuery\**;$(StageFolder)\**\Modules\Orchard.Media\**;$(StageFolder)\**\Modules\Orchard.MediaPicker\**;$(StageFolder)\**\Modules\Orchard.Rules\**;$(StageFolder)\**\Modules\Orchard.TaskLease\**;" />
       <MsDeploy-Folder-Input Include="$(StageFolder)\**\*" Exclude="$(StageFolder)\**\bin\**\*.xml;$(StageFolder)\**\obj\**\*;@(MsDeploy-Exclude-Modules)" />
       <MsDeploy-Parameters Include="$(LibFolder)\msdeploy\*.xml;$(LibFolder)\msdeploy\*.sql" />
     </ItemGroup>
@@ -228,9 +227,9 @@
   </Target>
   <Target Name="Package-Zip">
     <ItemGroup>
-      <Zip-Exclude Include="         $(MSBuildProjectDirectory)\src\**\bin\**\*;         $(MSBuildProjectDirectory)\src\**\obj\**\*;         $(MSBuildProjectDirectory)\**\App_Data\**\*;         $(MSBuildProjectDirectory)\**\_ReSharper*\**\*;         $(MSBuildProjectDirectory)\**\*.sln.cache;         $(MSBuildProjectDirectory)\**\*.suo;         $(MSBuildProjectDirectory)\**\*.user;         $(MSBuildProjectDirectory)\**\*.patch;         $(MSBuildProjectDirectory)\**\*.hgignore;         $(MSBuildProjectDirectory)\**\*.hg*\**\*;         $(LibFolder)\nunit\addins\**\*;         " Exclude="$(MSBuildProjectDirectory)\src\Orchard.Azure\Orchard.Azure.CloudService\*Content\**\*" />
+      <Zip-Exclude Include="$(MSBuildProjectDirectory)\src\**\packages\**\*;$(MSBuildProjectDirectory)\src\**\bin\**\*;$(MSBuildProjectDirectory)\src\**\obj\**\*;$(MSBuildProjectDirectory)\**\App_Data\**\*;$(MSBuildProjectDirectory)\**\node_modules\**\*;$(MSBuildProjectDirectory)\**\_ReSharper*\**\*;$(MSBuildProjectDirectory)\**\*.sln.cache;$(MSBuildProjectDirectory)\**\*.suo;$(MSBuildProjectDirectory)\**\*.user;$(MSBuildProjectDirectory)\**\*.patch;$(MSBuildProjectDirectory)\**\*.hgignore;$(MSBuildProjectDirectory)\**\*.hg*\**\*;$(LibFolder)\nunit\addins\**\*;" Exclude="$(MSBuildProjectDirectory)\src\Orchard.Azure\Orchard.Azure.CloudService\*Content\**\*" />
       <Zip-Stage Include="$(StageFolder)\**\*" />
-      <Zip-MsDeploy Include="$(MsDeployFolder)\**\*" />
+      <Zip-MsDeploy Include="$(MsDeployFolder)\**\*" Exclude="$(MSBuildProjectDirectory)\**\bin\**\*.pdb;" />
       <Zip-Source Include="         $(MSBuildProjectDirectory)\lib\**\*;         $(MSBuildProjectDirectory)\src\**\*;         $(MSBuildProjectDirectory)\*.txt;         $(MSBuildProjectDirectory)\*.proj;         $(MSBuildProjectDirectory)\*.cmd;         " Exclude="@(Zip-Exclude)" />
     </ItemGroup>
     <MakeDir Directories="$(MsDeployArtifactFolder);$(SourceArtifactFolder)" />
@@ -294,4 +293,5 @@
     </CompileTypeScriptFiles>
   </Target>
   <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.CompileTypeScriptFiles" />
+  <Import Project="$(LibFolder)\slowcheetah\SlowCheetah.Transforms.targets" xmlns="" />
 </Project>
