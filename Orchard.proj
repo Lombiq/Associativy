@@ -81,15 +81,15 @@
     <MSBuild Projects="AzurePackage.proj" Targets="CIBuild" />
   </Target>
   <Target Name="Clean">
-    <MSBuild Projects="$(SrcFolder)\Orchard.sln" Targets="Clean" />
+    <MSBuild Projects="$(SrcFolder)\Associativy.sln" Targets="Clean" />
     <RemoveDir Directories="$(BuildFolder)" ContinueOnError="true" />
     <RemoveDir Directories="$(ArtifactsFolder)" />
   </Target>
   <Target Name="Compile">
     <!-- Compile to "OutputFolder" -->
-    <MSBuild Projects="$(SrcFolder)\Orchard.sln" Targets="Build" Properties="Configuration=$(Configuration);OutputPath=$(CompileFolder)" />
+    <MSBuild Projects="$(SrcFolder)\Associativy.sln" Targets="Build" Properties="Configuration=$(Configuration);OutputPath=$(CompileFolder)" />
     <!-- Compile to "regular" output folder for devs using VS locally -->
-    <MSBuild Projects="$(SrcFolder)\Orchard.sln" Targets="Build" />
+    <MSBuild Projects="$(SrcFolder)\Associativy.sln" Targets="Build" />
   </Target>
   <Target Name="CompileMsBuildTasks">
     <MSBuild Projects="$(SrcFolder)\Tools\MSBuild.Orchard.Tasks\MSBuild.Orchard.Tasks.csproj" Targets="Build" Properties="Configuration=$(Configuration);OutputPath=$(MsBuildTasksFolder)" />
