@@ -609,5 +609,6 @@ $(function () {
             });
             return false;
         });
+
     })(window.mediaLibrarySettings);
 })
