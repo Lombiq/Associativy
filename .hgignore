@@ -14,3 +14,5 @@ src/Orchard.Web/App_Data
 syntax: regexp
 (?i)src/.*bin/.*
 src/Orchard.Web/Media/(?!Web.config|OrchardLogo.png).+
+src/packages/*
+packages/
