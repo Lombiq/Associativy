@@ -25,83 +25,8 @@
     <Version>$(BUILD_NUMBER)</Version>
     <Configuration Condition="$(Configuration) == ''">Release</Configuration>
     <AzureSrcFolder>$(SrcFolder)\Orchard.Azure</AzureSrcFolder>
-  </PropertyGroup>
-  <PropertyGroup>
-    <LibFolder>$(MSBuildProjectDirectory)\lib</LibFolder>
-    <SrcFolder>$(MSBuildProjectDirectory)\src</SrcFolder>
-    <BuildFolder>$(MSBuildProjectDirectory)\build</BuildFolder>
-    <MsBuildTasksFolder>$(MSBuildProjectDirectory)\buildtasks</MsBuildTasksFolder>
-    <ArtifactsFolder>$(MSBuildProjectDirectory)\artifacts</ArtifactsFolder>
-    <SqlCeFolder>$(MSBuildProjectDirectory)\lib\sqlce</SqlCeFolder>
-    <SourceArtifactFolder>$(ArtifactsFolder)\Source</SourceArtifactFolder>
-    <MsDeployArtifactFolder>$(ArtifactsFolder)\MsDeploy</MsDeployArtifactFolder>
-    <GalleryArtifactFolder>$(ArtifactsFolder)\Gallery</GalleryArtifactFolder>
-    <ModulesSrcFolder>$(MSBuildProjectDirectory)\src\Orchard.Web\Modules</ModulesSrcFolder>
-    <OrchardCoreSrcFolder>$(MSBuildProjectDirectory)\src\Orchard.Web\Core</OrchardCoreSrcFolder>
-    <ThemesSrcFolder>$(MSBuildProjectDirectory)\src\Orchard.Web\Themes</ThemesSrcFolder>
-    <CompileFolder>$(BuildFolder)\Compile</CompileFolder>
-    <WebSitesFolder>$(CompileFolder)\_PublishedWebsites</WebSitesFolder>
-    <StageFolder>$(BuildFolder)\Stage</StageFolder>
-    <MsDeployFolder>$(BuildFolder)\MsDeploy</MsDeployFolder>
-    <PrecompiledFolder>$(BuildFolder)\Precompiled</PrecompiledFolder>
-    <ProfilingFolder>$(BuildFolder)\Profiling</ProfilingFolder>
-    <GalleryFolder>$(BuildFolder)\Gallery</GalleryFolder>
-    <BuildPlatform Condition="$(ProgramW6432) != ''">x64</BuildPlatform>
-    <BuildPlatform Condition="$(BuildPlatform) == ''">x86</BuildPlatform>
-    <Version>$(BUILD_NUMBER)</Version>
-    <Configuration Condition="$(Configuration) == ''">Release</Configuration>
     <OrchardSolution>$(SrcFolder)\Orchard.sln</OrchardSolution>
-  </PropertyGroup>
-  <PropertyGroup>
-    <LibFolder>$(MSBuildProjectDirectory)\lib</LibFolder>
-    <SrcFolder>$(MSBuildProjectDirectory)\src</SrcFolder>
-    <BuildFolder>$(MSBuildProjectDirectory)\build</BuildFolder>
-    <MsBuildTasksFolder>$(MSBuildProjectDirectory)\buildtasks</MsBuildTasksFolder>
-    <ArtifactsFolder>$(MSBuildProjectDirectory)\artifacts</ArtifactsFolder>
-    <SqlCeFolder>$(MSBuildProjectDirectory)\lib\sqlce</SqlCeFolder>
-    <SourceArtifactFolder>$(ArtifactsFolder)\Source</SourceArtifactFolder>
-    <MsDeployArtifactFolder>$(ArtifactsFolder)\MsDeploy</MsDeployArtifactFolder>
-    <GalleryArtifactFolder>$(ArtifactsFolder)\Gallery</GalleryArtifactFolder>
-    <ModulesSrcFolder>$(MSBuildProjectDirectory)\src\Orchard.Web\Modules</ModulesSrcFolder>
-    <OrchardCoreSrcFolder>$(MSBuildProjectDirectory)\src\Orchard.Web\Core</OrchardCoreSrcFolder>
-    <ThemesSrcFolder>$(MSBuildProjectDirectory)\src\Orchard.Web\Themes</ThemesSrcFolder>
-    <CompileFolder>$(BuildFolder)\Compile</CompileFolder>
-    <WebSitesFolder>$(CompileFolder)\_PublishedWebsites</WebSitesFolder>
-    <StageFolder>$(BuildFolder)\Stage</StageFolder>
-    <MsDeployFolder>$(BuildFolder)\MsDeploy</MsDeployFolder>
-    <PrecompiledFolder>$(BuildFolder)\Precompiled</PrecompiledFolder>
-    <ProfilingFolder>$(BuildFolder)\Profiling</ProfilingFolder>
-    <GalleryFolder>$(BuildFolder)\Gallery</GalleryFolder>
-    <BuildPlatform Condition="$(ProgramW6432) != ''">x64</BuildPlatform>
-    <BuildPlatform Condition="$(BuildPlatform) == ''">x86</BuildPlatform>
-    <Version>$(BUILD_NUMBER)</Version>
-    <Configuration Condition="$(Configuration) == ''">Release</Configuration>
     <OrchardAzureSolution>$(AzureSrcFolder)\Orchard.Azure.sln</OrchardAzureSolution>
-  </PropertyGroup>
-  <PropertyGroup>
-    <LibFolder>$(MSBuildProjectDirectory)\lib</LibFolder>
-    <SrcFolder>$(MSBuildProjectDirectory)\src</SrcFolder>
-    <BuildFolder>$(MSBuildProjectDirectory)\build</BuildFolder>
-    <MsBuildTasksFolder>$(MSBuildProjectDirectory)\buildtasks</MsBuildTasksFolder>
-    <ArtifactsFolder>$(MSBuildProjectDirectory)\artifacts</ArtifactsFolder>
-    <SqlCeFolder>$(MSBuildProjectDirectory)\lib\sqlce</SqlCeFolder>
-    <SourceArtifactFolder>$(ArtifactsFolder)\Source</SourceArtifactFolder>
-    <MsDeployArtifactFolder>$(ArtifactsFolder)\MsDeploy</MsDeployArtifactFolder>
-    <GalleryArtifactFolder>$(ArtifactsFolder)\Gallery</GalleryArtifactFolder>
-    <ModulesSrcFolder>$(MSBuildProjectDirectory)\src\Orchard.Web\Modules</ModulesSrcFolder>
-    <OrchardCoreSrcFolder>$(MSBuildProjectDirectory)\src\Orchard.Web\Core</OrchardCoreSrcFolder>
-    <ThemesSrcFolder>$(MSBuildProjectDirectory)\src\Orchard.Web\Themes</ThemesSrcFolder>
-    <CompileFolder>$(BuildFolder)\Compile</CompileFolder>
-    <WebSitesFolder>$(CompileFolder)\_PublishedWebsites</WebSitesFolder>
-    <StageFolder>$(BuildFolder)\Stage</StageFolder>
-    <MsDeployFolder>$(BuildFolder)\MsDeploy</MsDeployFolder>
-    <PrecompiledFolder>$(BuildFolder)\Precompiled</PrecompiledFolder>
-    <ProfilingFolder>$(BuildFolder)\Profiling</ProfilingFolder>
-    <GalleryFolder>$(BuildFolder)\Gallery</GalleryFolder>
-    <BuildPlatform Condition="$(ProgramW6432) != ''">x64</BuildPlatform>
-    <BuildPlatform Condition="$(BuildPlatform) == ''">x86</BuildPlatform>
-    <Version>$(BUILD_NUMBER)</Version>
-    <Configuration Condition="$(Configuration) == ''">Release</Configuration>
     <Solution Condition="$(Solution) == ''">$(OrchardSolution)</Solution>
   </PropertyGroup>
   <Import Project="$(LibFolder)\msbuildtasks\MSBuild.Community.Tasks.Targets" />
