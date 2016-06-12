@@ -1,13 +1,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Notes", "_Notes", "{8A49DB66-40B2-4B6A-BFF0-D4839A240D00}"
-	ProjectSection(SolutionItems) = preProject
-		Shapes.txt = Shapes.txt
-		Zones.txt = Zones.txt
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Associativy Modules", "Associativy Modules", "{65D8AD91-DBDF-4DD7-86A6-E827115B6AD9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Associativy", "Orchard.Web\Modules\Associativy\Associativy.csproj", "{A8EE4964-4880-4EE1-AC0A-75492D89BBE8}"
